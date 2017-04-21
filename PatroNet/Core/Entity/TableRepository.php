@@ -54,7 +54,7 @@ class TableRepository implements Repository
      */
     public function get($id)
     {
-        $oActiveRecord = $this->oTable->getFirst($this->getRawFilterByIdOrIds($id), null, null, null, Table::FETCH_ACTIVE);
+        $oActiveRecord = $this->oTable->getFirst($this->getRawFilterByIdOrIds($id), null, null, Table::FETCH_ACTIVE);
         if (empty($oActiveRecord)) {
             return null;
         }
@@ -86,7 +86,7 @@ class TableRepository implements Repository
     private function getAllByRawFilter($filter, $order, $limit)
     {
         $self = $this;
-        return $this->oTable->getAll($filter, $order, $limit, null, null, ResultSet::FETCH_CALLBACK, function ($oActiveRecord) use ($self) {
+        return $this->oTable->getAll($filter, $order, $limit, null, ResultSet::FETCH_CALLBACK, function ($oActiveRecord) use ($self) {
             return $self->wrapActiveRecordToEntity($oActiveRecord);
         }, Table::FETCH_ACTIVE);
     }

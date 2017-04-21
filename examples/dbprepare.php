@@ -6,7 +6,7 @@ use \PatroNet\Core\Database\ConnectionDriver\Pdo\Connection as PdoConnection;
 use \PatroNet\Core\Database\PreparedStatement;
 use \PatroNet\Core\Database\ResultSet;
 
-$connectionUri = "pdo.mysql(mysql)://root:abc123@localhost:3306/patronet2015?charset=utf8#Alapértelmezett kapcsolat";
+$connectionUri = ". . .";
 
 $oConnection = (new ConnectionManager())->create($connectionUri);
 $oConnection->open();

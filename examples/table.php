@@ -4,7 +4,7 @@ use \PatroNet\Core\Database\ConnectionManager;
 use \PatroNet\Core\Database\Table;
 use \PatroNet\Core\Database\ResultSet;
 
-$connectionUri = "pdo.mysql(mysql)://root:abc123@localhost:3306/patronet2015?charset=utf8#Alapértelmezett kapcsolat";
+$connectionUri = ". . .";
 
 $oConnection = (new ConnectionManager())->create($connectionUri);
 $oConnection->open();
@@ -37,5 +37,5 @@ var_dump($oTable->getColumn("pn_name", ["pn_name" => ["^", "A"]], ["pn_name" => 
 
 echo "<hr size='5' color='#FF0000' />";
 
-var_dump($oTable->getAll(["pn_name" => ["^", "A"]], ["pn_name" => "desc"], 3, ["self.pn_id", "self.pn_name", "l.id", "l.Name"], ["l"])->fetchAll());
+var_dump($oTable->getAll(["pn_name" => ["^", "A"]], ["pn_name" => "desc"], 3, ["self.pn_id", "self.pn_name", "l.id", "l.Name"])->fetchAll());
 

@@ -113,17 +113,17 @@ class Table implements \IteratorAggregate, \Countable
      * @param mixed $filters
      * @return int
      */
-    public function count($filter = null, $tables = null)
+    public function count($filter = null)
     {
+        // TODO
+        $tables = $this->detectRelationTables($filter, null, null);
+        
         $oQueryBuilder = $this->oConnection->createQueryBuilder();
         $oQueryBuilder
             ->select([["aggregate", "count"]])
             ->from($this->tableName, $this->tableAlias)
             ->where($filter)
         ;
-        if (!is_null($filter) && is_null($tables)) {
-            $tables = $this->detectRelationTables($filter, null, null);
-        }
         $result = $oQueryBuilder->execute()->getResultSet()->fetch(ResultSet::FETCH_FIELD);
         return intval($result);
     }
@@ -165,7 +165,6 @@ class Table implements \IteratorAggregate, \Countable
      * @param string[string]|string|null $order
      * @param array|string|null $limit
      * @param array|string|null $fields
-     * @param array|null $tables
      * @param string $fetchMode
      * @param mixed $fetchParam1
      * @param mixed $fetchParam2
@@ -176,7 +175,6 @@ class Table implements \IteratorAggregate, \Countable
         $order = null,
         $limit = null,
         $fields = null,
-        $tables = null,
         $fetchMode = ResultSet::FETCH_ASSOC,
         $fetchParam1 = null,
         $fetchParam2 = null
@@ -185,9 +183,7 @@ class Table implements \IteratorAggregate, \Countable
         $selfFields = $this->oConnection->quoteIdentifier($this->tableAlias) . ".*";
         
         if ($fetchMode == self::FETCH_ACTIVE || ($fetchMode == ResultSet::FETCH_CALLBACK && $fetchParam2 == self::FETCH_ACTIVE)) {
-            if (is_null($tables)) {
-                $tables = $this->detectRelationTables($filter, $order, $fields);
-            }
+            $tables = $this->detectRelationTables($filter, $order, $fields);
             $fields = empty($tables) ? null : $selfFields;
             
             $oQueryBuilder = $this->oConnection->createQueryBuilder();
@@ -201,14 +197,16 @@ class Table implements \IteratorAggregate, \Countable
             
             $this->joinTables($oQueryBuilder, $tables);
             
+            $self = $this;
+            
             if ($fetchMode == self::FETCH_ACTIVE) {
-                return $oQueryBuilder->execute()->getResultSet()->setFetchMode(ResultSet::FETCH_CALLBACK, function ($record) {
-                    return new ActiveRecord($this, $this->getRecordKey($record), $record);
+                return $oQueryBuilder->execute()->getResultSet()->setFetchMode(ResultSet::FETCH_CALLBACK, function ($record) use ($self) {
+                    return new ActiveRecord($self, $self->getRecordKey($record), $record);
                 });
             } else {
                 $callback = $fetchParam1;
-                return $oQueryBuilder->execute()->getResultSet()->setFetchMode(ResultSet::FETCH_CALLBACK, function ($record) use ($callback) {
-                    $oActiveRecord = new ActiveRecord($this, $this->getRecordKey($record), $record);
+                return $oQueryBuilder->execute()->getResultSet()->setFetchMode(ResultSet::FETCH_CALLBACK, function ($record) use ($self, $callback) {
+                    $oActiveRecord = new ActiveRecord($self, $self->getRecordKey($record), $record);
                     return call_user_func($callback, $oActiveRecord);
                 });
             }
@@ -222,9 +220,7 @@ class Table implements \IteratorAggregate, \Countable
                 ->orderBy($order)
                 ->limit($limit)
             ;
-            if (is_null($tables)) {
-                $tables = $this->detectRelationTables($filter, $order, $fields);
-            }
+            $tables = $this->detectRelationTables($filter, $order, $fields);
             $this->joinTables($oQueryBuilder, $tables);
 			
             return $oQueryBuilder->execute()->getResultSet()->setFetchMode($fetchMode, $fetchParam1, $fetchParam2);
@@ -237,7 +233,6 @@ class Table implements \IteratorAggregate, \Countable
      * @param mixed $filter
      * @param string[string]|string|null $order
      * @param array|string|null $fields
-     * @param array|null $tables
      * @param string $fetchMode
      * @param mixed $fetchParam1
      * @param mixed $fetchParam2
@@ -247,13 +242,12 @@ class Table implements \IteratorAggregate, \Countable
         $filter = null,
         $order = null,
         $fields = null,
-        $tables = null,
         $fetchMode = ResultSet::FETCH_ASSOC,
         $fetchParam1 = null,
         $fetchParam2 = null
     )
     {
-        return $this->getAll($filter, $order, 1, $fields, $tables, $fetchMode, $fetchParam1, $fetchParam2)->fetch();
+        return $this->getAll($filter, $order, 1, $fields, $fetchMode, $fetchParam1, $fetchParam2)->fetch();
     }
     
     /**
@@ -261,7 +255,6 @@ class Table implements \IteratorAggregate, \Countable
      *
      * @param string|int $id
      * @param array|string|null $fields
-     * @param array|null $tables
      * @param string $fetchMode
      * @param mixed $fetchParam1
      * @param mixed $fetchParam2
@@ -270,14 +263,13 @@ class Table implements \IteratorAggregate, \Countable
     public function get(
         $id,
         $fields = null,
-        $tables = null,
         $fetchMode = ResultSet::FETCH_ASSOC,
         $fetchParam1 = null,
         $fetchParam2 = null
     )
     {
         $filter = $this->id2where($id);
-        return $this->getFirst($filter, null, $fields, $tables, $fetchMode, $fetchParam1, $fetchParam2);
+        return $this->getFirst($filter, null, $fields, $fetchMode, $fetchParam1, $fetchParam2);
     }
     
     /**
@@ -288,7 +280,7 @@ class Table implements \IteratorAggregate, \Countable
      */
     public function getActive($id)
     {
-        return $this->get($id, null, null, self::FETCH_ACTIVE);
+        return $this->get($id, null, self::FETCH_ACTIVE);
     }
     
     /**
@@ -296,12 +288,11 @@ class Table implements \IteratorAggregate, \Countable
      *
      * @param string|int $id
      * @param string $field
-     * @param array|null tables
      * @return array|null
      */
-    public function getField($id, $field, $tables = null)
+    public function getField($id, $field)
     {
-        $row = $this->get($id, [$field], $tables, ResultSet::FETCH_ASSOC);
+        $row = $this->get($id, [$field], ResultSet::FETCH_ASSOC);
         if ($row) {
             return $row[$field];
         } else {
@@ -316,12 +307,11 @@ class Table implements \IteratorAggregate, \Countable
      * @param mixed $filter
      * @param string[string]|string|null $order
      * @param mixed $limit
-     * @param array|null $tables
      * @return \PatroNet\Core\Database\ResultSet
      */
-    public function getColumn($field, $filter = null, $order = null, $limit = null, $tables = null)
+    public function getColumn($field, $filter = null, $order = null, $limit = null)
     {
-        return $this->getAll($filter, $order, $limit, is_int($field) ? null : [$field], $tables, ResultSet::FETCH_FIELD, $field);
+        return $this->getAll($filter, $order, $limit, is_int($field) ? null : [$field], ResultSet::FETCH_FIELD, $field);
     }
     
     /**
@@ -344,13 +334,9 @@ class Table implements \IteratorAggregate, \Countable
      * Checks that any mathing record exists in the table
      *
      * @param mixed $filter
-     * @param array|null $filter
      * @return boolean
      */
-    public function existsAny(
-        $filter = null,
-        $tables = null
-    )
+    public function existsAny($filter = null)
     {
         $fields = null;
         if (!is_null($this->uniqueKey) && $this->uniqueKey !== "") {
@@ -360,7 +346,7 @@ class Table implements \IteratorAggregate, \Countable
                 $fields = [$this->uniqueKey];
             }
         }
-        $row = $this->getFirst($filter, null, $fields, $tables);
+        $row = $this->getFirst($filter, null, $fields);
         return (!is_null($row) && $row !== false);
     }
     
