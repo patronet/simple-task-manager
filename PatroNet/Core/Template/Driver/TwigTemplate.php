@@ -16,7 +16,7 @@ class TwigTemplate implements FileTemplate
     
     static protected $INITED = false;
     
-    static protected $oTwigEnvironment = null;
+    static protected $environments = [];
     
     protected $file;
     
@@ -31,25 +31,30 @@ class TwigTemplate implements FileTemplate
      *
      * @return \Twig_Environment
      */
-    static public function getTwigEnvironment()
+    static public function getTwigEnvironment($cacheDirectory = "/tmp/twig")
     {
-        if (is_null(self::$oTwigEnvironment)) {
+        if (!isset(self::$environments[$cacheDirectory])) {
+            if (!is_dir($cacheDirectory)) {
+                mkdir($cacheDirectory, 0777, true);
+            }
+            
             require_once('includes/templating/twig/Twig/Autoloader.php');
             \Twig_Autoloader::register();
             $oTwigLoader = new \Twig_Loader_Filesystem();
             $oTwigLoader->addPath(".");
-            self::$oTwigEnvironment = new \Twig_Environment($oTwigLoader, [
-                "cache" => $this->cacheDirectory,
+            $oTwigLoader->addPath("/");
+            self::$environments[$cacheDirectory] = new \Twig_Environment($oTwigLoader, [
+                "cache" => $cacheDirectory,
                 "auto_reload" => true,
             ]);
         }
-        return self::$oTwigEnvironment;
+        return self::$environments[$cacheDirectory];
     }
     
     /**
      * @param string $file
      */
-    public function __construct($file, $cacheDirectory = "/tmp") // XXX
+    public function __construct($file, $cacheDirectory = "/tmp/twig")
     {
         $this->file = $file;
         $this->cacheDirectory = $cacheDirectory;
@@ -63,7 +68,7 @@ class TwigTemplate implements FileTemplate
     public function getTwigTemplate()
     {
         if (is_null($this->oTwigTemplate)) {
-            $this->oTwigTemplate = self::getTwigEnvironment()->loadTemplate($this->file);
+            $this->oTwigTemplate = self::getTwigEnvironment($this->cacheDirectory)->loadTemplate($this->file);
         }
         return $this->oTwigTemplate;
     }
