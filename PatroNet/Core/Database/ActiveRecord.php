@@ -9,9 +9,6 @@ namespace PatroNet\Core\Database;
 class ActiveRecord implements \ArrayAccess, \IteratorAggregate
 {
     
-    const STATUS_BOUND = "bound";
-    const STATUS_UNBOUND = "unbound";
-    
     const DATALEVEL_LOADED = "loaded";
     const DATALEVEL_CHANGES = "changes";
     const DATALEVEL_MERGED = "merged";
@@ -25,8 +22,6 @@ class ActiveRecord implements \ArrayAccess, \IteratorAggregate
     
     protected $changesRow = [];
     
-    protected $status;
-    
     /**
      * @param \PatroNet\Core\Database\Table $oTable
      * @param int|null $id
@@ -37,7 +32,11 @@ class ActiveRecord implements \ArrayAccess, \IteratorAggregate
         $this->oTable = $oTable;
         $this->id = $id;
         $this->loadedRow = $loadedRow;
-        $this->status = is_null($loadedRow) ? self::STATUS_BOUND : self::STATUS_UNBOUND;
+    }
+    
+    public function getId()
+    {
+        return $this->id;
     }
     
     /**
@@ -75,7 +74,7 @@ class ActiveRecord implements \ArrayAccess, \IteratorAggregate
      */
     public function offsetUnset($key)
     {
-        // FIXME / TODO
+        $this->rollbacktField($key);
     }
     
     /**
@@ -88,7 +87,7 @@ class ActiveRecord implements \ArrayAccess, \IteratorAggregate
      */
     public function offsetExists($key)
     {
-        // FIXME / TODO
+        return $this->checkField($key);
     }
     
     /**
@@ -138,7 +137,7 @@ class ActiveRecord implements \ArrayAccess, \IteratorAggregate
      */
     public function __isset($key)
     {
-        // FIXME / TODO
+        return $this->checkField($key);
     }
     
     /**
@@ -150,8 +149,7 @@ class ActiveRecord implements \ArrayAccess, \IteratorAggregate
      */
     public function __unset($key)
     {
-        // FIXME / TODO
-        // FIXME: set NULL?
+        $this->rollbacktField($key);
     }
     
     /**
@@ -159,17 +157,19 @@ class ActiveRecord implements \ArrayAccess, \IteratorAggregate
      */
     public function load()
     {
-        // FIXME / TODO
+        if (!is_null($this->id)) {
+            $this->loadedRow = $this->oTable->get($this->id);
+        }
     }
     
     /**
-     * Gets the current status
-     *
-     * @return string
+     * Ensures that a data record is loaded (when id exists)
      */
-    public function getStatus()
+    public function ensureLoaded()
     {
-        return $this->status;
+        if (is_null($this->loadedRow)) {
+            $this->load();
+        }
     }
     
     /**
@@ -190,8 +190,8 @@ class ActiveRecord implements \ArrayAccess, \IteratorAggregate
      */
     public function getRow($dataLevel = self::DATALEVEL_MERGED)
     {
-        if ($this->status == self::STATUS_UNBOUND && $dataLevel != self::DATALEVEL_CHANGES) {
-            $this->load();
+        if ($dataLevel != self::DATALEVEL_CHANGES) {
+            $this->ensureLoaded();
         }
         switch ($dataLevel) {
             case self::DATALEVEL_LOADED:
@@ -199,7 +199,7 @@ class ActiveRecord implements \ArrayAccess, \IteratorAggregate
             case self::DATALEVEL_CHANGES:
                 return $this->changesRow;
             case self::DATALEVEL_MERGED:
-                return $this->changesRow + $this->loadedRow;
+                return is_null($this->loadedRow) ? $this->changesRow : $this->changesRow + $this->loadedRow;
         }
         return [];
     }
@@ -242,12 +242,7 @@ class ActiveRecord implements \ArrayAccess, \IteratorAggregate
      */
     public function setField($fieldName, $value)
     {
-        $this->load();
-        if (array_key_exists($fieldName, $this->loadedRow)) {
-            $this->changesRow[$fieldName] = $value;
-        } else {
-            // FIXME/TODO: exception
-        }
+        $this->changesRow[$fieldName] = $value;
     }
     
     /**
@@ -265,7 +260,7 @@ class ActiveRecord implements \ArrayAccess, \IteratorAggregate
      *
      * @return boolean
      */
-    public function rollback() // FIXME: reset?
+    public function rollback()
     {
         if (is_null($this->loadedRow)) {
             $this->load();
@@ -279,15 +274,23 @@ class ActiveRecord implements \ArrayAccess, \IteratorAggregate
      *
      * @return boolean
      */
-    public function commit() // FIXME: save?
+    public function commit()
     {
         if (is_null($this->loadedRow)) {
             $this->load();
         }
-        if (empty($this->changesRow)) {
+        if (!is_null($this->id) && empty($this->changesRow)) {
             return true;
         }
-        $this->oTable->save($this->changesRow, $this->id);
+        $oResult = $this->oTable->save($this->changesRow, $this->id);
+        if (!$oResult->isSuccess()) {
+            return false;
+        }
+        if (is_null($this->id)) {
+            $this->id = $oResult->getLastInsertId();
+            $this->load();
+        }
+        return true;
     }
     
 }

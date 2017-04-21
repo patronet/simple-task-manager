@@ -58,7 +58,7 @@ class Table implements \IteratorAggregate, \Countable
     }
     
     /**
-     * Sets the record fetch mode
+     * Sets the default fetch mode
      *
      * @param string $fetchMode
      */
@@ -164,7 +164,7 @@ class Table implements \IteratorAggregate, \Countable
      * @param mixed $filter
      * @param string[string]|string|null $order
      * @param array|string|null $limit
-     * @param strint[]|string|null $fields
+     * @param array|string|null $fields
      * @param array|null $tables
      * @param string $fetchMode
      * @param mixed $fetchParam1
@@ -182,23 +182,36 @@ class Table implements \IteratorAggregate, \Countable
         $fetchParam2 = null
     )
     {
-        if ($fetchMode == self::FETCH_ACTIVE) {
-            $oConnection = $this->oConnection;
-            $oQueryBuilder = $oConnection->createQueryBuilder();
+        $selfFields = $this->oConnection->quoteIdentifier($this->tableAlias) . ".*";
+        
+        if ($fetchMode == self::FETCH_ACTIVE || ($fetchMode == ResultSet::FETCH_CALLBACK && $fetchParam2 == self::FETCH_ACTIVE)) {
+            if (is_null($tables)) {
+                $tables = $this->detectRelationTables($filter, $order, $fields);
+            }
+            $fields = empty($tables) ? null : $selfFields;
+            
+            $oQueryBuilder = $this->oConnection->createQueryBuilder();
             $oQueryBuilder
-                ->select()
+                ->select($fields)
                 ->from($this->tableName, $this->tableAlias)
                 ->where($filter)
                 ->orderBy($order)
                 ->limit($limit)
             ;
-            if (is_null($tables)) {
-                $tables = $this->detectRelationTables($filter, $order, $fields);
-            }
+            
             $this->joinTables($oQueryBuilder, $tables);
-            return $oQueryBuilder->execute()->getResultSet()->setFetchMode(ResultSet::FETCH_CALLBACK, function ($record) {
-                return new ActiveRecord($this, $this->getPrimaryKeyFromRecord($record), $record);
-            });
+            
+            if ($fetchMode == self::FETCH_ACTIVE) {
+                return $oQueryBuilder->execute()->getResultSet()->setFetchMode(ResultSet::FETCH_CALLBACK, function ($record) {
+                    return new ActiveRecord($this, $this->getRecordKey($record), $record);
+                });
+            } else {
+                $callback = $fetchParam1;
+                return $oQueryBuilder->execute()->getResultSet()->setFetchMode(ResultSet::FETCH_CALLBACK, function ($record) use ($callback) {
+                    $oActiveRecord = new ActiveRecord($this, $this->getRecordKey($record), $record);
+                    return call_user_func($callback, $oActiveRecord);
+                });
+            }
         } else {
             $oQueryBuilder = $this->oConnection->createQueryBuilder();
 			
@@ -223,7 +236,7 @@ class Table implements \IteratorAggregate, \Countable
      *
      * @param mixed $filter
      * @param string[string]|string|null $order
-     * @param strint[]|string|null $fields
+     * @param array|string|null $fields
      * @param array|null $tables
      * @param string $fetchMode
      * @param mixed $fetchParam1
@@ -247,7 +260,7 @@ class Table implements \IteratorAggregate, \Countable
      * Gets a single record by its id
      *
      * @param string|int $id
-     * @param strint[]|string|null $fields
+     * @param array|string|null $fields
      * @param array|null $tables
      * @param string $fetchMode
      * @param mixed $fetchParam1
@@ -328,6 +341,30 @@ class Table implements \IteratorAggregate, \Countable
     }
     
     /**
+     * Checks that any mathing record exists in the table
+     *
+     * @param mixed $filter
+     * @param array|null $filter
+     * @return boolean
+     */
+    public function existsAny(
+        $filter = null,
+        $tables = null
+    )
+    {
+        $fields = null;
+        if (!is_null($this->uniqueKey) && $this->uniqueKey !== "") {
+            if (is_array($this->uniqueKey)) {
+                $fields = array_keys($this->uniqueKey);
+            } else {
+                $fields = [$this->uniqueKey];
+            }
+        }
+        $row = $this->getFirst($filter, null, $fields, $tables);
+        return (!is_null($row) && $row !== false);
+    }
+    
+    /**
      * Saves a record into the table
      *
      * @param array $data
@@ -355,7 +392,7 @@ class Table implements \IteratorAggregate, \Countable
                 }
                 $oResult = $oQueryBuilder->execute();
                 if ($oResult->isSuccess()) {
-                    $this->lastSaveId = $id; // FIXME/TODO
+                    $this->lastSaveId = $id;
                 } else {
                     $this->lastSaveId = null;
                 }
@@ -386,14 +423,14 @@ class Table implements \IteratorAggregate, \Countable
                 ;
                 $oResult = $oQueryBuilder->execute();
                 if ($oResult->isSuccess()) {
-                    $this->lastSaveId = $this->oConnection->getLastInsertId(); // FIXME/TODO
+                    $this->lastSaveId = $oResult->getLastInsertId();
                 } else {
                     $this->lastSaveId = null;
                 }
                 return $oResult;
         }
         // FIXME:
-        throw new \Exception("Not supported save type");
+        throw new \Exception("Unsupported save type");
     }
     
     /**
@@ -471,6 +508,21 @@ class Table implements \IteratorAggregate, \Countable
             }
         }
         return $where;
+    }
+    
+    public function getRecordKey($record)
+    {
+        if (empty($this->uniqueKey)) {
+            return null;
+        } else if (is_array($this->uniqueKey)) {
+            $keyMap = [];
+            foreach ($this->uniqueKey as $keyField) {
+                $keyMap[$keyField] = $record[$keyField];
+            }
+            return $keyMap;
+        } else {
+            return $record[$this->uniqueKey];
+        }
     }
     
     // XXX

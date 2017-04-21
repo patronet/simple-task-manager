@@ -17,34 +17,11 @@ interface Entity
     public function getId();
     
     /**
-     * Gets the name of the entity
-     *
-     * @return string
-     */
-    public function getName();
-    
-    /**
      * Gets the label of the entity
      *
      * @return string
      */
     public function getLabel();
-    
-    /**
-     * Gets the description of the entity
-     *
-     * @return string
-     */
-    public function getDescription();
-    
-    /**
-     * Deletes the entity
-     */
-    public function delete();
-    
-    // FIXME/TODO
-    // update
-    // insert (uninserted entities)
     
 }
 

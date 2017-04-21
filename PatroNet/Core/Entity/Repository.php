@@ -1,63 +1,58 @@
 <?php
 
-namespace \PatroNet\Core\Entity;
+namespace PatroNet\Core\Entity;
 
 
 /**
- * Interface for entity repositories
+ * Interface for repositories of entities
  */
 interface Repository
 {
     
-    const SELECTOR_ID = "id";
-    
-    const SELECTOR_NAME = "name";
-    
-    // FIXME/TODO (xpath, css selector etc...)
-    
+    /**
+     * Creates a new unsaved entity
+     *
+     * @return \PatroNet\Core\Entity\Entity
+     */
+    public function create();
     
     /**
-     * Gets an entity by its ID or by its name
+     * Gets an entity by it ID
      *
-     * @param mixed $idOrName
-     * @param string $selector
+     * @param int $id
      * @return \PatroNet\Core\Entity\Entity|null
      */
-    public function get($idOrName, $selector = self::SELECTOR_ID);
+    public function get($id);
     
     /**
-     * Gets multiple entities by IDs or names
+     * Gets multiple entities by IDs
      *
-     * @param mixed[] $idOrNameList
-     * @param string $selector
-     * @return \PatroNet\Core\Entity\Entity[]
+     * @param int[] $idList
+     * @return \PatroNet\Core\Entity\Entity[]|Iterable
      */
-    public function getAll($idOrNameList = array(), $selector = self::SELECTOR_ID);
+    public function getAll($idList = null);
     
     /**
      * Removes an entity by its ID or by its name
      *
-     * @param mixed $idOrName
-     * @param string $selector
+     * @param int $id
      */
-    public function delete($idOrName, $selector = self::SELECTOR_ID);
+    public function delete($id);
     
     /**
-     * Removes multiple entities by IDs or names
+     * Removes multiple entities by IDs
      *
-     * @param mixed[] $idOrNameList
-     * @param string $selector
+     * @param int[] $idList
      */
-    public function deleteAll($idOrNameList = array(), $selector = self::SELECTOR_ID);
+    public function deleteAll($idList = null);
     
     /**
      * Checks whether the entity exists
      *
-     * @param mixed $idOrName
-     * @param string $selector
+     * @param int $id
      * @return boolean
      */
-    public function exists($idOrName, $selector = self::SELECTOR_ID);
+    public function exists($id);
     
 }
 

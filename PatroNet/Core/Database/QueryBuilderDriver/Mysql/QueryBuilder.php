@@ -202,7 +202,7 @@ class QueryBuilder extends AbstractQueryBuilder
             if (is_null($baseTableAlias)) {
                 return $this->quoteIdentifier($baseTable);
             } else {
-                return $this->quoteIdentifier($baseTable) . "AS" . $this->quoteIdentifier($baseTableAlias);
+                return $this->quoteIdentifier($baseTable) . " AS " . $this->quoteIdentifier($baseTableAlias);
             }
         } elseif ($baseTable instanceof QueryBuilderInterface) {
             if (is_null($baseTableAlias)) {

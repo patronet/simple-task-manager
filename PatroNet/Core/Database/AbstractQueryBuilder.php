@@ -242,7 +242,7 @@ abstract class AbstractQueryBuilder implements QueryBuilder
     /**
      * Sets the WHERE condition
      *
-     * @param array|string|null $whereCondition
+     * @param mixed $whereCondition
      * @return self
      */
     public function where($whereCondition)
@@ -254,7 +254,7 @@ abstract class AbstractQueryBuilder implements QueryBuilder
     /**
      * Sets the WHERE condition
      *
-     * @param array|string|null $whereCondition
+     * @param mixed $whereCondition
      * @return self
      */
     public function filter($whereCondition)
