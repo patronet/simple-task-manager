@@ -10,22 +10,22 @@ trait DownloadableTrait
 {
     
     protected function flushHeaders($filename, $mimeType = null)
-	{
-		header('Content-Description: File Transfer');
-		header("Content-Type: application/force-download");
-		
-		if(!is_null($mimeType)) 
-		{
-			header("Content-Type: " . $mimeType);
-		}
-		
-		header('Content-disposition: attachment; filename='.$filename);
-	}
+    {
+        header('Content-Description: File Transfer');
+        header("Content-Type: application/force-download");
+        
+        if(!is_null($mimeType)) 
+        {
+            header("Content-Type: " . $mimeType);
+        }
+        
+        header('Content-disposition: attachment; filename='.$filename);
+    }
     
-	protected function getMimeTypeByExtension($extension) 
-	{	
-		$extension = strtolower($extension);
-		
+    protected function getMimeTypeByExtension($extension) 
+    {    
+        $extension = strtolower($extension);
+        
         $mime_types = array(
 
             'txt' => 'text/plain',
@@ -81,37 +81,37 @@ trait DownloadableTrait
             'odt' => 'application/vnd.oasis.opendocument.text',
             'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
         );
-		
+        
         if (array_key_exists($extension, $mime_types)) {
             return $mime_types[$extension];
         } else {
             return 'application/octet-stream';
         }
-	}
-	
-	protected function getMimeTypeByFile($file) 
-	{
-		if(function_exists('finfo_open')) 
-		{
+    }
+    
+    protected function getMimeTypeByFile($file) 
+    {
+        if(function_exists('finfo_open')) 
+        {
             $finfo = finfo_open(FILEINFO_MIME);
             $mimetype = finfo_file($finfo, $file);
-			
-			if(!empty($mimetype)) {
-				finfo_close($finfo);
-				return $mimetype;
-			} else {
-				return null;
-			}
+            
+            if(!empty($mimetype)) {
+                finfo_close($finfo);
+                return $mimetype;
+            } else {
+                return null;
+            }
         } else {
-			return null;
-		}
-	}
-	
-	protected function getFileExtension($filename)
-	{
-		$extension = end(explode('.', $filename));
-		
-		return $extension;
-	}
-	
+            return null;
+        }
+    }
+    
+    protected function getFileExtension($filename)
+    {
+        $extension = end(explode('.', $filename));
+        
+        return $extension;
+    }
+    
 }

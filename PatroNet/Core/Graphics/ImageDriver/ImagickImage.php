@@ -2,14 +2,14 @@
 
 namespace PatroNet\Core\Graphics\ImageDriver;
 
-use \PatroNet\Core\Graphics\Image;
-use \PatroNet\Core\Graphics\AbstractImage;
-use \PatroNet\Core\Graphics\Color;
-use \PatroNet\Core\Graphics\Font;
-use \PatroNet\Core\Graphics\Exception as ImageException;
-use \Imagick;
-use \ImagickDraw;
-use \ImagickPixel;
+use PatroNet\Core\Graphics\Image;
+use PatroNet\Core\Graphics\AbstractImage;
+use PatroNet\Core\Graphics\Color;
+use PatroNet\Core\Graphics\Font;
+use PatroNet\Core\Graphics\Exception as ImageException;
+use Imagick;
+use ImagickDraw;
+use ImagickPixel;
 
 
 // TODO: arc-ot (es egyebeket) ellenorizni, nincs-e olyan jelenseg, mint a gmagicknel volt

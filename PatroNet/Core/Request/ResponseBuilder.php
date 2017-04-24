@@ -2,9 +2,9 @@
 
 namespace PatroNet\Core\Request;
 
-use \PatroNet\Core\Content\Source as ContentSource;
-use \PatroNet\Core\Content\StaticSource;
-use \PatroNet\Core\Request\Response;
+use PatroNet\Core\Content\Source as ContentSource;
+use PatroNet\Core\Content\StaticSource;
+use PatroNet\Core\Request\Response;
 
 
 /**
@@ -283,22 +283,22 @@ class ResponseBuilder
         $this->setContent(json_encode($data));
         return $this;
     }
-	
-	
-	/**
+    
+    
+    /**
      * Initializes a Http Exception response
      *
      * @param \PatroNet\Core\Request\HttpException $oHttpException
      * @return self
      */
-	public function initHttpException($oHttpException)
+    public function initHttpException($oHttpException)
     {
-		$this->reset();
+        $this->reset();
         $this->addHeader("Content-type: text/plain; charset=utf-8");
         $this->setContent($oHttpException->getMessage());
         return $this;
-	}
-	
+    }
+    
     
     /**
      * Builds the response

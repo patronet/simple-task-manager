@@ -447,7 +447,7 @@ class QueryBuilder extends AbstractQueryBuilder
                     $limit_limit = $maxLimit;
                 }
                 $limit = $limit_from . ", " . $limit_limit;
-				return "" . $limit;
+                return "" . $limit;
             } elseif (array_key_exists("page", $limit)) { // page is zero based!
                 $limit_page = $limit["page"];
                 if (array_key_exists("limit", $limit)) {
@@ -457,7 +457,7 @@ class QueryBuilder extends AbstractQueryBuilder
                 }
                 $limit_from = $limit_limit * $limit_page;
                 $limit = $limit_from . ", " . $limit_limit;
-				return "" . $limit;
+                return "" . $limit;
             } else {
                 return "" . $maxLimit;
             } 

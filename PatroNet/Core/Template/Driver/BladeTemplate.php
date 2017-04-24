@@ -2,8 +2,8 @@
 
 namespace PatroNet\Core\Template\Driver;
 
-use \PatroNet\Core\Content\SourceTrait;
-use \PatroNet\Core\Template\FileTemplate;
+use PatroNet\Core\Content\SourceTrait;
+use PatroNet\Core\Template\FileTemplate;
 
 
 /**

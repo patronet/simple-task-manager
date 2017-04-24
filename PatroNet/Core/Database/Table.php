@@ -2,7 +2,7 @@
 
 namespace PatroNet\Core\Database;
 
-use \PatroNet\Core\Common\StringUtil;
+use PatroNet\Core\Common\StringUtil;
 
 
 /**
@@ -212,7 +212,7 @@ class Table implements \IteratorAggregate, \Countable
             }
         } else {
             $oQueryBuilder = $this->oConnection->createQueryBuilder();
-			
+            
             $oQueryBuilder
                 ->select($fields)
                 ->from($this->tableName, $this->tableAlias)
@@ -222,7 +222,7 @@ class Table implements \IteratorAggregate, \Countable
             ;
             $tables = $this->detectRelationTables($filter, $order, $fields);
             $this->joinTables($oQueryBuilder, $tables);
-			
+            
             return $oQueryBuilder->execute()->getResultSet()->setFetchMode($fetchMode, $fetchParam1, $fetchParam2);
         }
     }
@@ -511,14 +511,12 @@ class Table implements \IteratorAggregate, \Countable
         }
     }
     
-    // XXX
-    static public function detectRelationTables($queryFilter, $queryOrder, $queryFields)
+    public static function detectRelationTables($queryFilter, $queryOrder, $queryFields)
     {
         $items = [];
         
         if (!is_null($queryFilter)) {
-            $items = array_merge($items, array_keys($queryFilter));
-            // TODO: recursive
+            $items = array_merge($items, self::getItemsForRelationTablesInFilter($queryFilter));
         }
         
         if (!is_null($queryOrder)) {
@@ -531,7 +529,7 @@ class Table implements \IteratorAggregate, \Countable
         
         $detectedAliases = [];
         
-        $pattern = "/^(\\w)\\./";
+        $pattern = "/^(\\w+)\\./";
         foreach ($items as $item) {
             if (is_string($item) && preg_match($pattern, $item, $match)) {
                 $detectedAliases[] = $match[1];
@@ -539,6 +537,28 @@ class Table implements \IteratorAggregate, \Countable
         }
         
         return array_values(array_unique($detectedAliases, \SORT_STRING));
+    }
+    
+    private static function getItemsForRelationTablesInFilter($queryFilter)
+    {
+        $result = [];
+        if ($queryFilter instanceof Filter) {
+            $queryFilter = $queryFilter->toArray();
+        }
+        if (is_array($queryFilter)) {
+            foreach ($queryFilter as $key => $value) {
+                if (is_string($key)) {
+                    $result[] = $key;
+                }
+                if (is_array($value[0])) {
+                    foreach ($value[0] as $subFilter) {
+                        $subResult = self::getItemsForRelationTablesInFilter($subFilter);
+                        $result = array_merge($result, $subResult);
+                    }
+                }
+            }
+        }
+        return $result;
     }
     
     protected function joinTables(QueryBuilder $oQueryBuilder, $tables)

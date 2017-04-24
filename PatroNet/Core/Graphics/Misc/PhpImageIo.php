@@ -2,8 +2,8 @@
 
 namespace PatroNet\Core\Graphics\Misc;
 
-use \PatroNet\Core\Graphics\Image;
-use \PatroNet\Core\Graphics\Color;
+use PatroNet\Core\Graphics\Image;
+use PatroNet\Core\Graphics\Color;
 
 
 // TODO: mas formatumok... (lehetseges?)

@@ -2,9 +2,9 @@
 
 namespace PatroNet\Core\Entity;
 
-use \PatroNet\Core\Database\ActiveRecord;
-use \PatroNet\Core\Database\ResultSet;
-use \PatroNet\Core\Database\Table;
+use PatroNet\Core\Database\ActiveRecord;
+use PatroNet\Core\Database\ResultSet;
+use PatroNet\Core\Database\Table;
 
 
 /**
@@ -39,7 +39,7 @@ class TableRepository implements Repository
     /**
      * Creates a new unsaved entity
      *
-     * @return \PatroNet\Core\Entity\Entity
+     * @return \PatroNet\Core\Entity\ActiveRecordEntity
      */
     public function create()
     {
@@ -50,7 +50,7 @@ class TableRepository implements Repository
      * Gets an entity by it ID
      *
      * @param int $id
-     * @return \PatroNet\Core\Entity\Entity|null
+     * @return \PatroNet\Core\Entity\ActiveRecordEntity|null
      */
     public function get($id)
     {
@@ -65,7 +65,9 @@ class TableRepository implements Repository
      * Gets multiple entities by IDs
      *
      * @param int[] $idList
-     * @return \PatroNet\Core\Entity\Entity[]|Iterable
+     * @param string[string] $order
+     * @param mixed $limit
+     * @return \PatroNet\Core\Entity\ActiveRecordEntity[]|Iterable
      */
     public function getAll($idList = null, $order = null, $limit = null)
     {
@@ -76,7 +78,9 @@ class TableRepository implements Repository
      * Gets multiple entities by a filter
      *
      * @param mixed $filter
-     * @return \PatroNet\Core\Entity\Entity[]|Iterable
+     * @param string[string] $order
+     * @param mixed $limit
+     * @return \PatroNet\Core\Entity\ActiveRecordEntity[]|Iterable
      */
     public function getAllByFilter($filter = null, $order = null, $limit = null)
     {
@@ -99,7 +103,12 @@ class TableRepository implements Repository
      */
     public function delete($id)
     {
-        return $this->oTable->deleteAll($this->getRawFilterByIdOrIds($id))->isSuccess();
+        $oEntity = $this->get($id);
+        if (!is_null($oEntity)) {
+            return $oEntity->delete();
+        } else {
+            return true;
+        }
     }
     
     /**
@@ -110,7 +119,12 @@ class TableRepository implements Repository
      */
     public function deleteAll($idList = [])
     {
-        return $this->oTable->deleteAll($this->getRawFilterByIdOrIds($idList))->isSuccess();
+        foreach ($idList as $id) {
+            if (!$this->delete($id)) {
+                return false;
+            }
+        }
+        return true;
     }
     
     /**
@@ -123,7 +137,10 @@ class TableRepository implements Repository
     {
         return $this->oTable->existsAny($this->getRawFilterByIdOrIds($id));
     }
-    
+
+    /**
+     * @param \PatroNet\Core\Database\ActiveRecord
+     */
     protected function createActiveRecord()
     {
         $oActiveRecord = new ActiveRecord($this->oTable);
@@ -133,6 +150,10 @@ class TableRepository implements Repository
         return $oActiveRecord;
     }
     
+    /**
+     * @param \PatroNet\Core\Database\ActiveRecord $oActiveRecord
+     * @return \PatroNet\Core\Entity\ActiveRecordEntity
+     */
     protected function wrapActiveRecordToEntity(ActiveRecord $oActiveRecord)
     {
         return new ActiveRecordEntity($oActiveRecord);

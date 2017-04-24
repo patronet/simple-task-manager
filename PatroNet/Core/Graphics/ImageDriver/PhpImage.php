@@ -2,13 +2,13 @@
 
 namespace PatroNet\Core\Graphics\ImageDriver;
 
-use \PatroNet\Core\Graphics\Image;
-use \PatroNet\Core\Graphics\AbstractImage;
-use \PatroNet\Core\Graphics\Color;
-use \PatroNet\Core\Graphics\Font;
-use \PatroNet\Core\Graphics\Exception as ImageException;
-use \PatroNet\Core\Graphics\Misc\Charmap;
-use \PatroNet\Core\Graphics\Misc\PhpImageIo;
+use PatroNet\Core\Graphics\Image;
+use PatroNet\Core\Graphics\AbstractImage;
+use PatroNet\Core\Graphics\Color;
+use PatroNet\Core\Graphics\Font;
+use PatroNet\Core\Graphics\Exception as ImageException;
+use PatroNet\Core\Graphics\Misc\Charmap;
+use PatroNet\Core\Graphics\Misc\PhpImageIo;
 
 
 /**

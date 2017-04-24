@@ -2,14 +2,14 @@
 
 namespace PatroNet\Core\Graphics\ImageDriver;
 
-use \PatroNet\Core\Graphics\Image;
-use \PatroNet\Core\Graphics\AbstractImage;
-use \PatroNet\Core\Graphics\Color;
-use \PatroNet\Core\Graphics\Font;
-use \PatroNet\Core\Graphics\Exception as ImageException;
-use \Gmagick;
-use \GmagickDraw;
-use \GmagickPixel;
+use PatroNet\Core\Graphics\Image;
+use PatroNet\Core\Graphics\AbstractImage;
+use PatroNet\Core\Graphics\Color;
+use PatroNet\Core\Graphics\Font;
+use PatroNet\Core\Graphics\Exception as ImageException;
+use Gmagick;
+use GmagickDraw;
+use GmagickPixel;
 
 
 // TODO: inkompatibilitas: text align (emulalva), get_pixel, fill,
