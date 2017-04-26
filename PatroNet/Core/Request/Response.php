@@ -2,7 +2,7 @@
 
 namespace PatroNet\Core\Request;
 
-use \PatroNet\Core\Content\Source as ContentSource;
+use PatroNet\Core\Content\Source as ContentSource;
 
 
 /**

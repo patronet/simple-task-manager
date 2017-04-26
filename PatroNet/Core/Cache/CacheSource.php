@@ -2,7 +2,7 @@
 
 namespace PatroNet\Core\Cache;
 
-use \PatroNet\Core\Content\StoredSource;
+use PatroNet\Core\Content\StoredSource;
 
 
 /**

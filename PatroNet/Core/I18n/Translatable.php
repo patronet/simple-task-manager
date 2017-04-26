@@ -10,10 +10,10 @@ namespace PatroNet\Core\I18n;
 interface Translatable 
 {
     
-	const FORMAT_ISO6391 = "format_iso6391";
-	const FORMAT_ISO6392 = "format_iso6392";
-	const FORMAT_LOCALE = "format_locale";
-	const FORMAT_LOCALE_UNDERSCORE = "format_locale_underscore";
+    const FORMAT_ISO6391 = "format_iso6391";
+    const FORMAT_ISO6392 = "format_iso6392";
+    const FORMAT_LOCALE = "format_locale";
+    const FORMAT_LOCALE_UNDERSCORE = "format_locale_underscore";
     
     // FIXME
     /**

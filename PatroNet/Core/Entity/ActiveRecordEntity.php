@@ -2,7 +2,7 @@
 
 namespace PatroNet\Core\Entity;
 
-use \PatroNet\Core\Database\ActiveRecord;
+use PatroNet\Core\Database\ActiveRecord;
 
 
 /**
@@ -58,6 +58,26 @@ class ActiveRecordEntity implements Entity
     public function save()
     {
         return $this->oActiveRecord->commit();
+    }
+
+    /**
+     * Gets whether this entity is stored
+     *
+     * @return boolean
+     */
+    public function isStored()
+    {
+        return $this->oActiveRecord->isStored();
+    }
+
+    /**
+     * Deletes this entity
+     *
+     * @return boolean
+     */
+    public function delete()
+    {
+        return $this->oActiveRecord->delete();
     }
     
     public function __toString()

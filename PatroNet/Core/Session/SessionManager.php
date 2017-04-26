@@ -2,7 +2,7 @@
 
 namespace PatroNet\Core\Session;
 
-use \PatroNet\Core\Session\Session;
+use PatroNet\Core\Session\Session;
 
 
 /**
@@ -10,8 +10,8 @@ use \PatroNet\Core\Session\Session;
  */
 class SessionManager
 {
-	protected $sessions = [];
-	
+    protected $sessions = [];
+    
     public function __construct()
     {
     }
@@ -24,7 +24,7 @@ class SessionManager
      */
     public function register(Session $oSession, $name = "default") 
     {
-		$this->sessions[$name] = $oSession;
+        $this->sessions[$name] = $oSession;
     }
     
     /**

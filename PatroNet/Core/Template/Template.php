@@ -2,7 +2,7 @@
 
 namespace PatroNet\Core\Template;
 
-use \PatroNet\Core\Content\Source;
+use PatroNet\Core\Content\Source;
 
 
 /**

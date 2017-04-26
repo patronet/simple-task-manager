@@ -2,7 +2,7 @@
 
 namespace PatroNet\Core\Graphics;
 
-use \PatroNet\Core\Common\Resource;
+use PatroNet\Core\Common\Resource;
 
 // TODO @throws \PatroNet\Core\Exception
 // FIXME: $color -> Color $oColor

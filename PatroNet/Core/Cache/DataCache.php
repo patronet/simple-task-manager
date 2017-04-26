@@ -8,7 +8,7 @@ namespace PatroNet\Core\Cache;
  */
 interface DataCache
 {
-	public function isValid();
-	
+    public function isValid();
+    
     public function clear();  
 }

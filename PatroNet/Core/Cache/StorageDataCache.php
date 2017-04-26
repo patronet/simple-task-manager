@@ -2,10 +2,10 @@
 
 namespace PatroNet\Core\Cache;
 
-use \PatroNet\Core\Content\Source;
-use \PatroNet\Core\Content\Storage;
-use \PatroNet\Core\Content\SourceTrait;
-use \PatroNet\Core\Common\DataSource;
+use PatroNet\Core\Content\Source;
+use PatroNet\Core\Content\Storage;
+use PatroNet\Core\Content\SourceTrait;
+use PatroNet\Core\Common\DataSource;
 
 
 /**
@@ -13,42 +13,42 @@ use \PatroNet\Core\Common\DataSource;
  */
 abstract class StorageDataCache implements DataSource
 {
-	protected $oStorage;
-	protected $lifetime;
-	protected $data = null;
-	
+    protected $oStorage;
+    protected $lifetime;
+    protected $data = null;
+    
     /**
      * @param \PatroNet\Core\Content\Storage $oStorage
      * @param int $lifetime
      */
-	public function __construct(Storage $oStorage, $lifetime)
-	{
-		$this->oStorage = $oStorage;
-		$this->lifetime = $lifetime;
-	}
-	
+    public function __construct(Storage $oStorage, $lifetime)
+    {
+        $this->oStorage = $oStorage;
+        $this->lifetime = $lifetime;
+    }
+    
     /**
      * Gets the data
      *
      * @return mixed
      */
-	public function getData()
-	{
-		if(is_null($this->data))
-		{
-			if($this->isValid())
-			{
-				$this->data = unserialize($this->oStorage->get());
-			} else {
-				$this->data = $this->_getData();
-				$this->oStorage->put(serialize($this->data));
-			}
-		}
-				
-		return $this->data;
-	}
-	
-	/**
+    public function getData()
+    {
+        if(is_null($this->data))
+        {
+            if($this->isValid())
+            {
+                $this->data = unserialize($this->oStorage->get());
+            } else {
+                $this->data = $this->_getData();
+                $this->oStorage->put(serialize($this->data));
+            }
+        }
+                
+        return $this->data;
+    }
+    
+    /**
      * Checks whether the cache is not expired
      *
      * @return booelan
@@ -60,14 +60,14 @@ abstract class StorageDataCache implements DataSource
             $this->oStorage->getChangeTime() + $this->lifetime > time()
         );
     }
-	
-	/**
+    
+    /**
      * Explicitly clears the cache
      */
     public function clear()
     {
         $this->oStorage->delete();
     }
-	
-	abstract protected function _getData();
+    
+    abstract protected function _getData();
 }

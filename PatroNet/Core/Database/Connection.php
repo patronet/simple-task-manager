@@ -2,7 +2,7 @@
 
 namespace PatroNet\Core\Database;
 
-use \PatroNet\Core\Common\Resource;
+use PatroNet\Core\Common\Resource;
 
 
 /**

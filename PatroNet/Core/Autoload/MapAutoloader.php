@@ -30,12 +30,12 @@ class MapAutoloader implements FileAutoloader
     {
         if (isset($this->classmap[$class])) {
             $file = $this->classmap[$class];
-			if (!is_null($this->rootDirectory)) {
-			    $file = str_replace('~', $this->rootDirectory, $file);
-			}
-			if (is_file($file)) {
-				return $file;
-			}
+            if (!is_null($this->rootDirectory)) {
+                $file = str_replace('~', $this->rootDirectory, $file);
+            }
+            if (is_file($file)) {
+                return $file;
+            }
         }
         return null;
     }

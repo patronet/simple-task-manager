@@ -33,10 +33,35 @@ class ActiveRecord implements \ArrayAccess, \IteratorAggregate
         $this->id = $id;
         $this->loadedRow = $loadedRow;
     }
+
+    /**
+     * Gets the associated table object
+     *
+     * @return Table
+     */
+    public function getTable()
+    {
+        return $this->oTable;
+    }
     
+    /**
+     * Gets id of row
+     * 
+     * @return mixed
+     */
     public function getId()
     {
         return $this->id;
+    }
+    
+    /**
+     * Gets whether this record is stored
+     * 
+     * @return boolean
+     */
+    public function isStored()
+    {
+        return (!is_null($this->id) || !is_null($this->loadedRow));
     }
     
     /**
@@ -291,6 +316,25 @@ class ActiveRecord implements \ArrayAccess, \IteratorAggregate
             $this->load();
         }
         return true;
+    }
+    
+    /**
+     * Deletes this record
+     * 
+     * @return boolean
+     */
+    public function delete()
+    {
+        if (is_null($this->id)) {
+            return true;
+        } else {
+            if (!$this->oTable->delete($this->id)) {
+                return false;
+            }
+            $this->id = null;
+            $this->loadedRow = null;
+            return true;
+        }
     }
     
 }

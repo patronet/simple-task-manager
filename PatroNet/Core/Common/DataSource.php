@@ -11,8 +11,8 @@ interface DataSource
     
     /**
      * Gets the data
-	 *
-	 * @return mixed
+     *
+     * @return mixed
      */
     public function getData();
     

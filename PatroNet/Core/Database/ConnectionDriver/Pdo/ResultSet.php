@@ -2,7 +2,7 @@
 
 namespace PatroNet\Core\Database\ConnectionDriver\Pdo;
 
-use \PatroNet\Core\Database\ResultSet as ResultSetInterface;
+use PatroNet\Core\Database\ResultSet as ResultSetInterface;
 
 
 /**
