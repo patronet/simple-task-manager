@@ -116,7 +116,7 @@ class Table implements \IteratorAggregate, \Countable
     public function count($filter = null)
     {
         // TODO
-        $tables = $this->detectRelationTables($filter, null, null);
+        $tables = self::detectTableNames($filter, null, null);
         
         $oQueryBuilder = $this->oConnection->createQueryBuilder();
         $oQueryBuilder
@@ -134,16 +134,15 @@ class Table implements \IteratorAggregate, \Countable
      * @param string $alias
      * @param mixed $joinCondition
      * @param string|null $linkTo
-     * @param string[] $requires
      * @param string $joinType
      */
-    public function addRelation($alias, $joinCondition, $linkTo = null, $requires = [], $joinType = QueryBuilder::JOINTYPE_LEFT)
+    public function addRelation($alias, $joinCondition, $linkTo = null, $joinType = QueryBuilder::JOINTYPE_LEFT)
     {
         $tableName = is_null($linkTo) ? $alias : $linkTo;
         $this->relations[$alias] = [
             "tableName" => $tableName,
             "joinCondition" => $joinCondition,
-            "requires" => $requires,
+            "detectedTableNames" => self::detectTableNamesInJoinCondition($joinCondition),
             "joinType" => $joinType,
         ];
     }
@@ -183,7 +182,7 @@ class Table implements \IteratorAggregate, \Countable
         $selfFields = $this->oConnection->quoteIdentifier($this->tableAlias) . ".*";
         
         if ($fetchMode == self::FETCH_ACTIVE || ($fetchMode == ResultSet::FETCH_CALLBACK && $fetchParam2 == self::FETCH_ACTIVE)) {
-            $tables = $this->detectRelationTables($filter, $order, $fields);
+            $tables = $this->detectTableNames($filter, $order, $fields);
             $fields = empty($tables) ? null : $selfFields;
             
             $oQueryBuilder = $this->oConnection->createQueryBuilder();
@@ -220,7 +219,7 @@ class Table implements \IteratorAggregate, \Countable
                 ->orderBy($order)
                 ->limit($limit)
             ;
-            $tables = $this->detectRelationTables($filter, $order, $fields);
+            $tables = $this->detectTableNames($filter, $order, $fields);
             $this->joinTables($oQueryBuilder, $tables);
             
             return $oQueryBuilder->execute()->getResultSet()->setFetchMode($fetchMode, $fetchParam1, $fetchParam2);
@@ -511,12 +510,12 @@ class Table implements \IteratorAggregate, \Countable
         }
     }
     
-    public static function detectRelationTables($queryFilter, $queryOrder, $queryFields)
+    public static function detectTableNames($queryFilter, $queryOrder, $queryFields)
     {
         $items = [];
         
         if (!is_null($queryFilter)) {
-            $items = array_merge($items, self::getItemsForRelationTablesInFilter($queryFilter));
+            $items = array_merge($items, self::getItemsForTableNamesInFilter($queryFilter));
         }
         
         if (!is_null($queryOrder)) {
@@ -539,7 +538,7 @@ class Table implements \IteratorAggregate, \Countable
         return array_values(array_unique($detectedAliases, \SORT_STRING));
     }
     
-    private static function getItemsForRelationTablesInFilter($queryFilter)
+    private static function getItemsForTableNamesInFilter($queryFilter)
     {
         $result = [];
         if ($queryFilter instanceof Filter) {
@@ -552,7 +551,7 @@ class Table implements \IteratorAggregate, \Countable
                 }
                 if (is_array($value[0])) {
                     foreach ($value[0] as $subFilter) {
-                        $subResult = self::getItemsForRelationTablesInFilter($subFilter);
+                        $subResult = self::getItemsForTableNamesInFilter($subFilter);
                         $result = array_merge($result, $subResult);
                     }
                 }
@@ -561,22 +560,56 @@ class Table implements \IteratorAggregate, \Countable
         return $result;
     }
     
+    private function detectTableNamesInJoinCondition($joinCondition)
+    {
+        $pattern = "/^(\\w+)\\./";
+        $detectedAliases = [];
+        foreach ($joinCondition as $fromField => $toField) {
+            if (is_string($fromField) && preg_match($pattern, $fromField, $match)) {
+                $detectedAliases[] = $match[1];
+            }
+            if (is_string($toField) && preg_match($pattern, $toField, $match)) {
+                $detectedAliases[] = $match[1];
+            }
+        }
+        return array_values(array_unique($detectedAliases, \SORT_STRING));
+    }
+    
     protected function joinTables(QueryBuilder $oQueryBuilder, $tables)
     {
-        $allTables = [];
+        $aliasesToJoin = [];
+        
         if (!is_null($tables)) {
-            foreach ($tables as $table) {
-                $allTables[] = $table;
-                if (array_key_exists($table, $this->relations)) {
-                    $allTables = array_merge($allTables, $this->relations[$table]["requires"]);
+            foreach ($this->relations as $alias => $relation) {
+                if (in_array($alias, $tables)) {
+                    $aliasesToJoin[] = $alias;
                 }
             }
         }
-        if (!empty($allTables)) {
-            foreach ($allTables as $table) {
-                if (array_key_exists($table, $this->relations)) {
-                    $relation = $this->relations[$table];
-                    $oQueryBuilder->join($relation["tableName"], $table, $relation["joinCondition"], $relation["joinType"]);
+
+        $resolvedAliases = [];
+        while (count($resolvedAliases) < count($aliasesToJoin)) {
+            $foundDependencies = [];
+            
+            foreach ($aliasesToJoin as $alias) {
+                if (!in_array($alias, $resolvedAliases)) {
+                    foreach ($this->relations[$alias]["detectedTableNames"] as $detectedTableName) {
+                        if (array_key_exists($detectedTableName, $this->relations)) {
+                            $foundDependencies[] = $detectedTableName;
+                        }
+                    }
+                    $resolvedAliases[] = $alias;
+                }
+            }
+            
+            $aliasesToJoin = array_unique(array_merge($foundDependencies, $aliasesToJoin), \SORT_STRING);
+        }
+        
+        if (!empty($aliasesToJoin)) {
+            foreach ($aliasesToJoin as $alias) {
+                if (array_key_exists($alias, $this->relations)) {
+                    $relation = $this->relations[$alias];
+                    $oQueryBuilder->join($relation["tableName"], $alias, $relation["joinCondition"], $relation["joinType"]);
                 } else {
                     // FIXME/TODO (exception?)
                 }
