@@ -301,9 +301,6 @@ class ActiveRecord implements \ArrayAccess, \IteratorAggregate
      */
     public function commit()
     {
-        if (is_null($this->loadedRow)) {
-            $this->load();
-        }
         if (!is_null($this->id) && empty($this->changesRow)) {
             return true;
         }
@@ -313,9 +310,9 @@ class ActiveRecord implements \ArrayAccess, \IteratorAggregate
         }
         if (is_null($this->id)) {
             $this->id = $oResult->getLastInsertId();
-            $this->load();
         }
         $this->changesRow = [];
+        $this->load();
         return true;
     }
     
