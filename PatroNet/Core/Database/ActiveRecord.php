@@ -315,6 +315,7 @@ class ActiveRecord implements \ArrayAccess, \IteratorAggregate
             $this->id = $oResult->getLastInsertId();
             $this->load();
         }
+        $this->changesRow = [];
         return true;
     }
     
