@@ -327,7 +327,7 @@ abstract class AbstractQueryBuilder implements QueryBuilder
      * Executes the query with the given connection or the stored connection
      *
      * @param \PatroNet\Core\Database\Connection $oConnection
-     * @return self
+     * @return \PatroNet\Core\Database\Result
      */
     public function execute(Connection $oConnection = null)
     {
