@@ -1,0 +1,3 @@
+[submodule "lib/patronet-core"]
+	path = lib/patronet-core
+	url = https://github.com/patronet/patronet-core
