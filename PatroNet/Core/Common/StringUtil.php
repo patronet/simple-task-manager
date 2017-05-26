@@ -9,6 +9,14 @@ namespace PatroNet\Core\Common;
 class StringUtil
 {
     
+    const CASE_CAMEL = "camel";
+    
+    const CASE_PASCAL = "pascal";
+    
+    const CASE_LOWER = "lower";
+    
+    const CASE_UPPER = "upper";
+    
     /**
      * Splits text with escape support
      *
@@ -49,6 +57,45 @@ class StringUtil
                 $item
             );
         }, $items));
+    }
+    
+    /**
+     * Changes case style of a string
+     * 
+     * @param string $input
+     * @param strint $separator Set null to auto
+     * @return string
+     */
+    static public function transformTokenCase($input, $case = self::CASE_CAMEL, $separator = null)
+    {
+        $tokens = preg_split('#[^a-zA-Z]+|(?<=[a-z])(?=[A-Z])#', $input);
+        $transformedTokens = [];
+        foreach ($tokens as $i => $token) {
+            $transformedToken = $token;
+            if ($case == self::CASE_CAMEL) {
+                $transformedToken = strtolower($token);
+                if ($i > 0) {
+                    $transformedToken = ucfirst($transformedToken);
+                }
+            } else if ($case == self::CASE_PASCAL) {
+                $transformedToken = ucfirst(strtolower($transformedToken));
+            } else if ($case == self::CASE_LOWER) {
+                $transformedToken = strtolower($token);
+            } else if ($case == self::CASE_UPPER) {
+                $transformedToken = strtoupper($token);
+            }
+            $transformedTokens[] = $transformedToken;
+        }
+        if (is_null($separator)) {
+            if ($case == self::CASE_LOWER) {
+                $separator = "-";
+            } else if ($case == self::CASE_UPPER) {
+                $separator = "_";
+            } else {
+                $separator = "";
+            }
+        }
+        return implode($separator, $transformedTokens);
     }
     
 }

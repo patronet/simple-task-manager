@@ -36,6 +36,11 @@ class TableRepository implements Repository
         return $this->filter;
     }
     
+    public function count($filter = null)
+    {
+    	return $this->oTable->count($this->getRawFilterByFilter($filter));
+    }
+    
     /**
      * Creates a new unsaved entity
      *
@@ -67,7 +72,7 @@ class TableRepository implements Repository
      * @param int[] $idList
      * @param string[string] $order
      * @param mixed $limit
-     * @return \PatroNet\Core\Entity\ActiveRecordEntity[]|Iterable
+     * @return \PatroNet\Core\Database\ResultSet 
      */
     public function getAll($idList = null, $order = null, $limit = null)
     {
@@ -80,7 +85,7 @@ class TableRepository implements Repository
      * @param mixed $filter
      * @param string[string] $order
      * @param mixed $limit
-     * @return \PatroNet\Core\Entity\ActiveRecordEntity[]|Iterable
+     * @return \PatroNet\Core\Database\ResultSet 
      */
     public function getAllByFilter($filter = null, $order = null, $limit = null)
     {

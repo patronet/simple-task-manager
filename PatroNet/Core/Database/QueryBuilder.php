@@ -2,8 +2,6 @@
 
 namespace PatroNet\Core\Database;
 
-use PatroNet\Core\Common\Resource;
-
 
 /**
  * Interface for query builders

@@ -111,29 +111,12 @@ class Response
         return $this->complete;
     }
     
-    protected function createHttpStatusHeader($httpStatus)
-    {
-        // TODO
-        $knownStatuses = [
-            200 => "OK",
-            202 => "Accepted",
-            404 => "Not found",
-            405 => "Method Not Allowed",
-            500 => "Internal Server Error",
-        ];
-        $fallbackStatus = 500;
-        if (array_key_exists($httpStatus, $knownStatuses)) {
-            $httpStatus = $fallbackStatus;
-        }
-        return "HTTP/1.1 200 " . $knownStatuses[$httpStatus];
-    }
-    
     /**
      * Sends the request to the client
      */
     public function send()
     {
-        header($this->createHttpStatusHeader($this->httpStatus));
+        http_response_code($this->httpStatus);
         foreach ($this->getHeaders() as $header) {
             header($header);
         }

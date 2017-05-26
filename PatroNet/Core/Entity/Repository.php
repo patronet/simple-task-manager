@@ -6,7 +6,7 @@ namespace PatroNet\Core\Entity;
 /**
  * Interface for repositories of entities
  */
-interface Repository
+interface Repository extends \Countable
 {
     
     /**

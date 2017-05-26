@@ -2,7 +2,6 @@
 
 use PatroNet\Core\Autoload\Registrator;
 use PatroNet\Core\Autoload\Psr0Autoloader;
-use PatroNet\Core\Autoload\RegexPsr0Autoloader;
 
 require_once(__DIR__ . '/PatroNet/Core/Autoload/Autoloader.php');
 require_once(__DIR__ . '/PatroNet/Core/Autoload/FileAutoloader.php');

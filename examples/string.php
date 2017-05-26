@@ -1,8 +1,6 @@
 <?php
 
-use \PatroNet\Core\Content\BinaryString;
 use \PatroNet\Core\Content\UnicodeString;
-use \PatroNet\Core\Content\EncodedString;
 
 $oStr = new UnicodeString("árvíztűrő tükörfúrógép");
 

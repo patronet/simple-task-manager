@@ -10,15 +10,15 @@ class ConnectionManager
 {
     
     static protected $connectionClassMap = [
-        "pdo" => "Pn\\Core\\Database\\ConnectionDriver\\Pdo\\Connection",
+        "pdo" => "PatroNet\\Core\\Database\\ConnectionDriver\\Pdo\\Connection",
     ];
     
     static protected $platformClassMap = [
-        "mysql" => "Pn\\Core\\Database\\PlatformDriver\\Mysql\\Platform",
+        "mysql" => "PatroNet\\Core\\Database\\PlatformDriver\\Mysql\\Platform",
     ];
     
     static protected $queryBuilderClassMap = [
-        "mysql" => "Pn\\Core\\Database\\QueryBuilderDriver\\Mysql\\QueryBuilder",
+        "mysql" => "PatroNet\\Core\\Database\\QueryBuilderDriver\\Mysql\\QueryBuilder",
     ];
     
     protected $connections = [];
@@ -107,6 +107,7 @@ class ConnectionManager
      *
      * @param string $uri
      * @param string $name
+     * @return \PatroNet\Core\Database\Connection
      */
     public function create($uri, $name = "default")
     {

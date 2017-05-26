@@ -2,10 +2,6 @@
 
 namespace PatroNet\Core\Cache;
 
-use PatroNet\Core\Content\Source;
-use PatroNet\Core\Content\Storage;
-use PatroNet\Core\Content\SourceTrait;
-
 
 /**
  * Base class for cached data sources

@@ -1,10 +1,7 @@
 <?php
 
 use \PatroNet\Core\Database\ConnectionManager;
-use \PatroNet\Core\Database\Connection;
-use \PatroNet\Core\Database\ConnectionDriver\Pdo\Connection as PdoConnection;
 use \PatroNet\Core\Database\PreparedStatement;
-use \PatroNet\Core\Database\ResultSet;
 
 $connectionUri = ". . .";
 

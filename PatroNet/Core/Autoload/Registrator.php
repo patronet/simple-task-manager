@@ -3,7 +3,9 @@
 namespace PatroNet\Core\Autoload;
 
 // FIXME...
-// TODO: remember registered autoloaders, and provide exists() and other aggregate methods
+// TODO: remember registered autoloaders
+//   TODO: provide exists() and aggregate methods
+//   TODO: $Autoloader->getRootNamespace() -> sort by root namespace (desc)
 
 /**
  * Autoloader registrator

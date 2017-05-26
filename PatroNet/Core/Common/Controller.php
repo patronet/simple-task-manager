@@ -4,6 +4,8 @@ namespace PatroNet\Core\Common;
 
 /**
  * Interface for controllers
+ * 
+ * @deprecated
  */
 interface Controller
 {

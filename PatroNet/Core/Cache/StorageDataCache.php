@@ -2,9 +2,7 @@
 
 namespace PatroNet\Core\Cache;
 
-use PatroNet\Core\Content\Source;
 use PatroNet\Core\Content\Storage;
-use PatroNet\Core\Content\SourceTrait;
 use PatroNet\Core\Common\DataSource;
 
 
