@@ -549,7 +549,7 @@ class Table implements \IteratorAggregate, \Countable
                 if (is_string($key)) {
                     $result[] = $key;
                 }
-                if (is_array($value[0])) {
+                if (is_array($value) && is_array($value[0])) {
                     foreach ($value[0] as $subFilter) {
                         $subResult = self::getItemsForTableNamesInFilter($subFilter);
                         $result = array_merge($result, $subResult);
