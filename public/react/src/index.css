@@ -1,0 +1,33 @@
+
+html, body {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.stm-frame-outer {
+    width: 100%;
+    height: 100%;
+}
+
+.stm-frame-top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    z-index: 100;
+    background-color: #DDCC99;
+}
+
+.stm-frame-side {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 100%;
+    z-index: 50;
+    box-sizing: border-box;
+    padding-top: 40px;
+    background-color: #CCCCCC;
+}
