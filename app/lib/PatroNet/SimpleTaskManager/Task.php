@@ -14,7 +14,8 @@ class Task extends ActiveRecordEntity
     
     const STATUS_CREATED = 'created';
     const STATUS_PROGRESS = 'progress';
-    const STATUS_DEVELOPMENT = 'developed';
+    const STATUS_PAUSED = 'paused';
+    const STATUS_DEVELOPED = 'developed';
     const STATUS_READY = 'ready';
     const STATUS_ACCEPTED = 'accepted';
     

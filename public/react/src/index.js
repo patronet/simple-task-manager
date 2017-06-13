@@ -3,5 +3,8 @@ import ReactDOM from 'react-dom';
 import StmApp from './StmApp';
 import './index.css';
 
-ReactDOM.render(<StmApp />, document.getElementById('root'));
+// XXX
+const serviceUrl = "/service.php";
+
+ReactDOM.render(<StmApp serviceUrl={serviceUrl} />, document.getElementById('root'));
 

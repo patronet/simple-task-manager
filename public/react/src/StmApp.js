@@ -3,6 +3,24 @@ import StmSideMenu from './StmSideMenu';
 import StmTopMenu from './StmTopMenu';
 
 class StmApp extends Component {
+    
+    constructor(props) {
+        super(props);
+    }
+    
+    componentDidMount() {
+        // XXX
+        var oReq = new XMLHttpRequest();
+        oReq.open("GET", this.props.serviceUrl);
+        oReq.responseType = "text";
+        
+        oReq.addEventListener("load", function (ev) {
+            alert(ev.response);
+        });
+        
+        oReq.send();
+    }
+    
     render() {
         return (
             <div className="stm-frame-outer">
@@ -18,6 +36,7 @@ class StmApp extends Component {
             </div>
         );
     }
+    
 }
 
 export default StmApp;
