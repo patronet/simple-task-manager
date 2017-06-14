@@ -8,15 +8,16 @@ class StmApp extends Component {
         super(props);
     }
     
-    componentDidMount() {
+    componentDidMount() {alert(this.props.serviceUrl);
         // XXX
         var oReq = new XMLHttpRequest();
-        oReq.open("GET", this.props.serviceUrl);
-        oReq.responseType = "text";
+        oReq.open("GET", this.props.serviceUrl, true);
         
-        oReq.addEventListener("load", function (ev) {
-            alert(ev.response);
-        });
+        oReq.onreadystatechange = function() {
+            if (this.readyState == 4) {
+               alert(this.responseText);
+            }
+        };
         
         oReq.send();
     }
