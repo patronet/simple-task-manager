@@ -1,40 +1,21 @@
 import React, { Component } from 'react';
-import StmSideMenu from './StmSideMenu';
-import StmTopMenu from './StmTopMenu';
+import StmLogin from './StmLogin';
+import StmAdmin from './StmAdmin';
 
 class StmApp extends Component {
     
     constructor(props) {
         super(props);
-    }
-    
-    componentDidMount() {alert(this.props.serviceUrl);
-        // XXX
-        var oReq = new XMLHttpRequest();
-        oReq.open("GET", this.props.serviceUrl, true);
-        oReq.setRequestHeader("Accept", "text/json");
-        
-        oReq.onreadystatechange = function() {
-            if (this.readyState == 4) {
-               alert(this.responseText);
-            }
-        };
-        
-        oReq.send();
+        this.state = {
+            loggedIn: false,
+        }
     }
     
     render() {
+        var screen = this.state.loggedIn ? <StmAdmin />: <StmLogin app={this} />
         return (
             <div className="stm-frame-outer">
-                <div className="stm-frame-top">
-                    <StmTopMenu />
-                </div>
-                <div className="stm-frame-side">
-                    <StmSideMenu />
-                </div>
-                <div className="stm-frame-content">
-                    CONTENT...
-                </div>
+                {screen}
             </div>
         );
     }
