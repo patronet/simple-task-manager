@@ -12,6 +12,7 @@ class StmApp extends Component {
         // XXX
         var oReq = new XMLHttpRequest();
         oReq.open("GET", this.props.serviceUrl, true);
+        oReq.setRequestHeader("Accept", "text/json");
         
         oReq.onreadystatechange = function() {
             if (this.readyState == 4) {
