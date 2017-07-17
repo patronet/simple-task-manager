@@ -99,7 +99,7 @@ class ActiveRecord implements \ArrayAccess, \IteratorAggregate
      */
     public function offsetUnset($key)
     {
-        $this->rollbacktField($key);
+        $this->rollbackField($key);
     }
     
     /**
@@ -174,7 +174,7 @@ class ActiveRecord implements \ArrayAccess, \IteratorAggregate
      */
     public function __unset($key)
     {
-        $this->rollbacktField($key);
+        $this->rollbackField($key);
     }
     
     /**
@@ -275,7 +275,7 @@ class ActiveRecord implements \ArrayAccess, \IteratorAggregate
      *
      * @param string $fieldName
      */
-    public function rollbacktField($fieldName)
+    public function rollbackField($fieldName)
     {
         unset($this->changesRow[$fieldName]);
     }
