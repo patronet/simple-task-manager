@@ -10,5 +10,5 @@ require_once(__DIR__ . '/PatroNet/Core/Autoload/FileAutoloaderTrait.php');
 require_once(__DIR__ . '/PatroNet/Core/Autoload/Psr0Autoloader.php');
 require_once(__DIR__ . '/PatroNet/Core/Autoload/Registrator.php');
 
-Registrator::register(new Psr0Autoloader('PatroNet', __DIR__ . '/PatroNet'));
+Registrator::register(new Psr0Autoloader('PatroNet\\Core', __DIR__ . '/PatroNet/Core'));
 
