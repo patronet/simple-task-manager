@@ -17,7 +17,7 @@ class RegexPsr0Autoloader implements FileAutoloader
     /**
      * @param string $searchPattern
      * @param string $replacePattern
-     * @param string $replacement
+     * @param string|callable $replacement
      */
     public function __construct($searchPattern, $replacePattern, $replacement)
     {
@@ -38,7 +38,11 @@ class RegexPsr0Autoloader implements FileAutoloader
             return null;
         }
         $namespace = $match[0];
-        $path = preg_replace($this->replacePattern, $this->replacement, $namespace);
+        if (is_callable($this->replacement)) {
+            $path = preg_replace_callback($this->replacePattern, $this->replacement, $namespace);
+        } else {
+            $path = preg_replace($this->replacePattern, $this->replacement, $namespace);
+        }
         $oPsr0Autoloader = new Psr0Autoloader($namespace, $path);
         return $oPsr0Autoloader->getFile($classname);
     }
