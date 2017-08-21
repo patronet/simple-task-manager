@@ -122,7 +122,7 @@ class NullObject implements
     /**
      * Fake method call handler
      *
-     * @param callback $name
+     * @param callable $name
      * @param array $arguments
      * @return self
      */

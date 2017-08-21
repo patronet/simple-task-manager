@@ -465,7 +465,7 @@ class Table implements \IteratorAggregate, \Countable
     protected function id2where($id)
     {
         if (is_null($id)) {
-            return [];
+            return ["no"];
         }
         if (is_array($this->uniqueKey)) {
             if (is_string($id)) {

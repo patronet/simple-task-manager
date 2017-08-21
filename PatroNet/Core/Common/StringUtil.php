@@ -63,7 +63,7 @@ class StringUtil
      * Changes case style of a string
      * 
      * @param string $input
-     * @param strint $separator Set null to auto
+     * @param string $separator Set null to auto
      * @return string
      */
     static public function transformTokenCase($input, $case = self::CASE_CAMEL, $separator = null)

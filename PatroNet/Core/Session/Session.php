@@ -12,7 +12,7 @@ interface Session
     /**
      * Gets the current user of the session if any
      *
-     * @return \PatroNet\Core\Session|null
+     * @return Session|null
      */
     public function getUser();
     

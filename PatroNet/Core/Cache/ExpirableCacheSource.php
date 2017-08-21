@@ -89,7 +89,7 @@ class ExpirableCacheSource implements CacheSource
     /**
      * Checks whether the cache is not expired
      *
-     * @return booelan
+     * @return boolean
      */
     public function isValid()
     {
@@ -102,7 +102,7 @@ class ExpirableCacheSource implements CacheSource
     /**
      * Regenerate the cache if the time has expired
      *
-     * @return booelan
+     * @return boolean
      */
     public function validate()
     {

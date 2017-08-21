@@ -4,11 +4,9 @@ namespace PatroNet\Core\Graphics\ImageDriver;
 
 use PatroNet\Core\Graphics\Image;
 use PatroNet\Core\Graphics\AbstractImage;
-use PatroNet\Core\Graphics\Color;
-use PatroNet\Core\Graphics\Font;
-use Gmagick;
-use GmagickDraw;
-use GmagickPixel;
+use Gmagick; // XXX
+use GmagickDraw; // XXX
+use GmagickPixel; // XXX
 
 
 // TODO: inkompatibilitas: text align (emulalva), get_pixel, fill,
@@ -64,7 +62,7 @@ class GmagickImage extends AbstractImage
         }
         $this->oGmagick = $this->_create_image($width, $height, $bgcolor);
         return $this;
-    }catch(Exception $e){return $this->_error("Image can not be created");}}
+    }catch(\Exception $e){return $this->_error("Image can not be created");}}
     
     /**
      * Loads image from file
@@ -78,7 +76,7 @@ class GmagickImage extends AbstractImage
         $this->oGmagick = new Gmagick($file);
         $this->_save_filename($file);
         return $this;
-    }catch(Exception $e){return $this->_error("Image can not be loaded");}}
+    }catch(\Exception $e){return $this->_error("Image can not be loaded");}}
     
     /**
      * Clones another image
@@ -95,7 +93,7 @@ class GmagickImage extends AbstractImage
             }
         }
         return $this;
-    }catch(Exception $e){return $this->_error("Image can not be cloned");}}
+    }catch(\Exception $e){return $this->_error("Image can not be cloned");}}
     
     /**
      * Creates a clone of this image
@@ -115,7 +113,7 @@ class GmagickImage extends AbstractImage
     public function getWidth()
     {try{
         return $this->oGmagick->getImageWidth();
-    }catch(Exception $e){return false;}}
+    }catch(\Exception $e){return false;}}
     
     /**
      * Gets height of the image
@@ -125,7 +123,7 @@ class GmagickImage extends AbstractImage
     function getHeight()
     {try{
         return $this->oGmagick->getImageHeight();
-    }catch(Exception $e){return false;}}
+    }catch(\Exception $e){return false;}}
     
     /**
      * Reduce the image to a cut of the original image
@@ -153,7 +151,7 @@ class GmagickImage extends AbstractImage
             $this->oGmagick->cropImage($width, $height, $left, $top);
         }
         return $this;
-    }catch(Exception $e){return $this->_error("Image can not be cut");}}
+    }catch(\Exception $e){return $this->_error("Image can not be cut");}}
     
     /**
      * Resizes the image
@@ -244,7 +242,7 @@ class GmagickImage extends AbstractImage
             return $this->_error("Unknown resizing mode");
         }
         return $this;
-    }catch(Exception $e){return $this->_error("Image can not be resized");}}
+    }catch(\Exception $e){return $this->_error("Image can not be resized");}}
     
     /**
      * Flips the image horizontally
@@ -255,7 +253,7 @@ class GmagickImage extends AbstractImage
     {try{
         $this->oGmagick->flipImage();
         return $this;
-    }catch(Exception $e){return $this->_error("Image can not be flipped");}}
+    }catch(\Exception $e){return $this->_error("Image can not be flipped");}}
     
     /**
      * Flips the image vertically
@@ -266,7 +264,7 @@ class GmagickImage extends AbstractImage
     {try{
         $this->oGmagick->flopImage();
         return $this;
-    }catch(Exception $e){return $this->_error("Image can not be flopped");}}
+    }catch(\Exception $e){return $this->_error("Image can not be flopped");}}
     
     /**
      * Rotates the image
@@ -278,7 +276,7 @@ class GmagickImage extends AbstractImage
     {try{
         $this->oGmagick->rotateImage($this->_create_color($this->behindColor), $angle);
         return $this;
-    }catch(Exception $e){return $this->_error("Image can not be rotated");}}
+    }catch(\Exception $e){return $this->_error("Image can not be rotated");}}
     
     /**
      * Pastes another image into this image
@@ -330,7 +328,7 @@ class GmagickImage extends AbstractImage
                 return $this->_error("Image can not be pasted");
             }
         }
-    }catch(Exception $e){return $this->_error("Image can not be pasted");}}
+    }catch(\Exception $e){return $this->_error("Image can not be pasted");}}
     
     /**
      * Draws text
@@ -365,7 +363,7 @@ class GmagickImage extends AbstractImage
         }
         $this->oGmagick->annotateImage($oDraw, $left, $top, $angle, $text);
         return $this;
-    }catch(Exception $e){return $this->_error("Text can not be drawn");}}
+    }catch(\Exception $e){return $this->_error("Text can not be drawn");}}
     
     /**
      * Gets width of a text
@@ -383,7 +381,7 @@ class GmagickImage extends AbstractImage
         }
         $metrics = $this->oGmagick->queryFontMetrics($oDraw, $text);
         return $metrics['textWidth'];
-    }catch(Exception $e){return 0;}}
+    }catch(\Exception $e){return 0;}}
     
     /**
      * Gets height of upper case characters
@@ -401,7 +399,7 @@ class GmagickImage extends AbstractImage
         $metrics = $this->oGmagick->queryFontMetrics($oDraw, 'I');
         $height = $metrics['textHeight'] + $metrics['descender'] - 2;
         return $height;
-    }catch(Exception $e){return 0;}}
+    }catch(\Exception $e){return 0;}}
     
     /**
      * Draws a point
@@ -426,7 +424,7 @@ class GmagickImage extends AbstractImage
         }
         $this->oGmagick->drawImage($oDraw);
         return $this;
-    }catch(Exception $e){return $this->_error("Point can not be drawn");}}
+    }catch(\Exception $e){return $this->_error("Point can not be drawn");}}
     
     /**
      * Draws a line
@@ -446,7 +444,7 @@ class GmagickImage extends AbstractImage
         $oDraw->line($left1,$top1,$left2,$top2);
         $this->oGmagick->drawImage($oDraw);
         return $this;
-    }catch(Exception $e){return $this->_error("Line can not be drawn");}}
+    }catch(\Exception $e){return $this->_error("Line can not be drawn");}}
     
     /**
      * Draws a rectangle
@@ -463,7 +461,7 @@ class GmagickImage extends AbstractImage
         $oDraw->rectangle($left, $top, $left + $width - 1, $top + $height - 1);
         $this->oGmagick->drawImage($oDraw);
         return $this;
-    }catch(Exception $e){return $this->_error("Rectangle can not be drawn");}}
+    }catch(\Exception $e){return $this->_error("Rectangle can not be drawn");}}
     
     /**
      * Draws a rectangle with rounded corners
@@ -485,7 +483,7 @@ class GmagickImage extends AbstractImage
         $oDraw->roundRectangle($left, $top, $left + $width - 1, $top + $height - 1, $radius, $verradius);
         $this->oGmagick->drawImage($oDraw);
         return $this;
-    }catch(Exception $e){return $this->_error("Rounded rectangle can not be drawn");}}
+    }catch(\Exception $e){return $this->_error("Rounded rectangle can not be drawn");}}
     
     /**
      * Draws a circle
@@ -501,7 +499,7 @@ class GmagickImage extends AbstractImage
         $oDraw->ellipse($left, $top, $radius, $radius, 0, 360);
         $this->oGmagick->drawImage($oDraw);
         return $this;
-    }catch(Exception $e){return $this->_error("Circle can not be drawn");}}
+    }catch(\Exception $e){return $this->_error("Circle can not be drawn");}}
     
     /**
      * Draws an ellipse
@@ -518,7 +516,7 @@ class GmagickImage extends AbstractImage
         $oDraw->ellipse($left + $width / 2, $top + $height / 2, $width / 2, $height / 2, 0, 360);
         $this->oGmagick->drawImage($oDraw);
         return $this;
-    }catch(Exception $e){return $this->_error("Ellipse can not be drawn");}}
+    }catch(\Exception $e){return $this->_error("Ellipse can not be drawn");}}
     
     /**
      * Draws part of circle line
@@ -568,7 +566,7 @@ class GmagickImage extends AbstractImage
         $oDraw->arc($left, $top, $left + $width, $top + $height, $startangle, $endangle);
         $this->oGmagick->drawImage($oDraw);
         return $this;
-    }catch(Exception $e){return $this->_error("Ellipse arc line can not be drawn");}}
+    }catch(\Exception $e){return $this->_error("Ellipse arc line can not be drawn");}}
     
     /**
      * Draws an ellipse sector
@@ -621,7 +619,7 @@ class GmagickImage extends AbstractImage
         $this->oGmagick->drawImage($oDraw);
         $this->oGmagick->drawImage($oDrawLines);
         return $this;
-    }catch(Exception $e){return $this->_error("Ellipse arc can not be drawn");}}
+    }catch(\Exception $e){return $this->_error("Ellipse arc can not be drawn");}}
     
     /**
      * Draws bezier curve
@@ -648,7 +646,7 @@ class GmagickImage extends AbstractImage
         ]);
         $this->oGmagick->drawImage($oDraw);
         return $this;
-    }catch(Exception $e){return $this->_error("Bezier curve can not be drawn");}}
+    }catch(\Exception $e){return $this->_error("Bezier curve can not be drawn");}}
     
     /**
      * Draws a polygon
@@ -662,7 +660,7 @@ class GmagickImage extends AbstractImage
         $oDraw->polygon($this->_create_pointarr($points));
         $this->oGmagick->drawImage($oDraw);
         return $this;
-    }catch(Exception $e){return $this->_error("Polygon can not be drawn");}}
+    }catch(\Exception $e){return $this->_error("Polygon can not be drawn");}}
     
     /**
      * Runs fill from the given point
@@ -699,7 +697,7 @@ class GmagickImage extends AbstractImage
             default:
                 return $this->_error("Unknown effect");
         }
-    }catch(Exception $e){return $this->_error("Effect can not be applied");}}
+    }catch(\Exception $e){return $this->_error("Effect can not be applied");}}
     
     /**
      * Paints on a specified pixel
@@ -734,7 +732,7 @@ class GmagickImage extends AbstractImage
         $oDraw->point($left, $top);
         $this->oGmagick->drawImage($oDraw);
         return $this;
-    }catch(Exception $e){return $this->_error("Pixel can not be drawn");}}
+    }catch(\Exception $e){return $this->_error("Pixel can not be drawn");}}
     
     /**
      * Gets a pixel's color
@@ -762,7 +760,7 @@ class GmagickImage extends AbstractImage
         $this->oGmagick->setImageFormat($type);
         echo $this->oGmagick;
         return $this;
-    }catch(Exception $e){return $this->_error("Image can not be flushed");}}
+    }catch(\Exception $e){return $this->_error("Image can not be flushed");}}
     
     /**
      * Gets image content as binary string
@@ -774,7 +772,7 @@ class GmagickImage extends AbstractImage
     {try{
         $this->oGmagick->setImageFormat($type);
         return '' . $this->oGmagick;
-    }catch(Exception $e){return "";}}
+    }catch(\Exception $e){return "";}}
     
     /**
      * Saves image to file
@@ -794,7 +792,7 @@ class GmagickImage extends AbstractImage
         }
         $this->oGmagick->writeImage($file);
         return $this;
-    }catch(Exception $e){return $this->_error("Image can not be saved");}}
+    }catch(\Exception $e){return $this->_error("Image can not be saved");}}
     
     /**
      * Frees allocated memory
@@ -808,7 +806,7 @@ class GmagickImage extends AbstractImage
         }
         $this->oGmagick = null;
         return $this;
-    }catch(Exception $e){return $this->_error("Memory can not be clean");}}
+    }catch(\Exception $e){return $this->_error("Memory can not be clean");}}
     
     
     /* PRIVATES */

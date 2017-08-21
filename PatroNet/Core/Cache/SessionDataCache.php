@@ -61,7 +61,7 @@ class SessionDataCache implements DataCache
     /**
      * Checks whether the cache is not expired
      *
-     * @return booelan
+     * @return boolean
      */
     public function isValid()
     {

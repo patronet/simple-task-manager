@@ -3,6 +3,7 @@
 use \PatroNet\Core\Content\Source;
 use \PatroNet\Core\Content\FileStorage;
 use \PatroNet\Core\Cache\ExpirableCacheSource;
+use PatroNet\Core\Content\SourceTrait;
 
 class TestSource implements Source
 {

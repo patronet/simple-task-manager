@@ -49,7 +49,7 @@ abstract class StorageDataCache implements DataSource
     /**
      * Checks whether the cache is not expired
      *
-     * @return booelan
+     * @return boolean
      */
     public function isValid()
     {

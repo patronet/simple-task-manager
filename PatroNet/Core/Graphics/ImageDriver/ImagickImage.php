@@ -65,7 +65,7 @@ class ImagickImage extends AbstractImage
         $this->_init_draw_settings();
         $this->oImagick = $this->_create_image($width, $height, $bgcolor);
         return $this;
-    }catch(Exception $e){return $this->_error("Image can not be created");}}
+    }catch(\Exception $e){return $this->_error("Image can not be created");}}
     
     /**
      * Loads image from file
@@ -83,7 +83,7 @@ class ImagickImage extends AbstractImage
         $this->oImagick = new Imagick($file);
         $this->_save_filename($file);
         return $this;
-    }catch(Exception $e){return $this->_error("Image can not be loaded");}}
+    }catch(\Exception $e){return $this->_error("Image can not be loaded");}}
     
     /**
      * Clones another image
@@ -101,7 +101,7 @@ class ImagickImage extends AbstractImage
             }
         }
         return $this;
-    }catch(Exception $e){return $this->_error("Image can not be cloned");}}
+    }catch(\Exception $e){return $this->_error("Image can not be cloned");}}
     
     /**
      * Creates a clone of this image
@@ -121,7 +121,7 @@ class ImagickImage extends AbstractImage
     public function getWidth()
     {try{
         return $this->oImagick->getImageWidth();
-    }catch(Exception $e){return 0;}}
+    }catch(\Exception $e){return 0;}}
     
     /**
      * Gets height of the image
@@ -131,7 +131,7 @@ class ImagickImage extends AbstractImage
     function getHeight()
     {try{
         return $this->oImagick->getImageHeight();
-    }catch(Exception $e){return 0;}}
+    }catch(\Exception $e){return 0;}}
     
     /**
      * Sets the font
@@ -144,7 +144,7 @@ class ImagickImage extends AbstractImage
         $this->font = $font;
         $this->draw_settings->setFont($this->font->getFile());
         return $this;
-    }catch(Exception $e){return $this->_error("Can not set font");}}
+    }catch(\Exception $e){return $this->_error("Can not set font");}}
     
     /**
      * Sets the text size
@@ -157,7 +157,7 @@ class ImagickImage extends AbstractImage
         $this->fontSize = $size;
         $this->draw_settings->setFontSize($size);
         return $this;
-    }catch(Exception $e){return $this->_error("Can not set font size");}}
+    }catch(\Exception $e){return $this->_error("Can not set font size");}}
     
     /**
      * Sets the stroke color
@@ -171,7 +171,7 @@ class ImagickImage extends AbstractImage
         $this->draw_settings->setStrokeColor($this->_create_color($color));
         $this->draw_settings->setStrokeOpacity($this->_create_opacity($color));
         return $this;
-    }catch(Exception $e){return $this->_error("Can not set color");}}
+    }catch(\Exception $e){return $this->_error("Can not set color");}}
     
     /**
      * Sets the fill color
@@ -185,7 +185,7 @@ class ImagickImage extends AbstractImage
         $this->draw_settings->setFillColor($this->_create_color($color));
         $this->draw_settings->setFillOpacity($this->_create_opacity($color));
         return $this;
-    }catch(Exception $e){return $this->_error("Can not set fill color");}}
+    }catch(\Exception $e){return $this->_error("Can not set fill color");}}
     
     /**
      * Enables or disables antialiasing
@@ -199,7 +199,7 @@ class ImagickImage extends AbstractImage
         $this->draw_settings->setStrokeAntialias($enabled);
         $this->draw_settings->setTextAntialias($enabled);
         return $this;
-    }catch(Exception $e){return $this->_error("Can not set antialiasing");}}
+    }catch(\Exception $e){return $this->_error("Can not set antialiasing");}}
     
     /**
      * Sets stroke weight
@@ -212,7 +212,7 @@ class ImagickImage extends AbstractImage
         $this->weight = $weight;
         $this->draw_settings->setStrokeWidth($weight);
         return $this;
-    }catch(Exception $e){return $this->_error("Can not set weight");}}
+    }catch(\Exception $e){return $this->_error("Can not set weight");}}
     
     /**
      * Sets round mode
@@ -225,7 +225,7 @@ class ImagickImage extends AbstractImage
         $this->roundedPrimitives = $rounded;
         $this->draw_settings->setStrokeLineCap($rounded?Imagick::LINECAP_ROUND:Imagick::LINECAP_BUTT);
         return $this;
-    }catch(Exception $e){return $this->_error("Can not set rounded primitives");}}
+    }catch(\Exception $e){return $this->_error("Can not set rounded primitives");}}
     
     /**
      * Reduce the image to a cut of the original image
@@ -253,7 +253,7 @@ class ImagickImage extends AbstractImage
             $this->oImagick->cropImage($width, $height, $left, $top);
         }
         return $this;
-    }catch(Exception $e){return $this->_error("Image can not be cut");}}
+    }catch(\Exception $e){return $this->_error("Image can not be cut");}}
     
     /**
      * Resizes the image
@@ -344,7 +344,7 @@ class ImagickImage extends AbstractImage
             return $this->_error("Unknown resizing mode");
         }
         return $this;
-    }catch(Exception $e){return $this->_error("Image can not be resized");}}
+    }catch(\Exception $e){return $this->_error("Image can not be resized");}}
     
     /**
      * Flips the image horizontally
@@ -355,7 +355,7 @@ class ImagickImage extends AbstractImage
     {try{
         $this->oImagick->flipImage();
         return $this;
-    }catch(Exception $e){return $this->_error("Image can not be flipped");}}
+    }catch(\Exception $e){return $this->_error("Image can not be flipped");}}
     
     /**
      * Flips the image vertically
@@ -366,7 +366,7 @@ class ImagickImage extends AbstractImage
     {try{
         $this->oImagick->flopImage();
         return $this;
-    }catch(Exception $e){return $this->_error("Image can not be flopped");}}
+    }catch(\Exception $e){return $this->_error("Image can not be flopped");}}
     
     /**
      * Rotates the image
@@ -378,7 +378,7 @@ class ImagickImage extends AbstractImage
     {try{
         $this->oImagick->rotateImage($this->_create_color($this->behindColor), $angle);
         return $this;
-    }catch(Exception $e){return $this->_error("Image can not be rotated");}}
+    }catch(\Exception $e){return $this->_error("Image can not be rotated");}}
     
     /**
      * Pastes another image into this image
@@ -430,7 +430,7 @@ class ImagickImage extends AbstractImage
                 return $this->_error("Image can not be pasted");
             }
         }
-    }catch(Exception $e){return $this->_error("Image can not be pasted");}}
+    }catch(\Exception $e){return $this->_error("Image can not be pasted");}}
     
     /**
      * Draws text
@@ -456,7 +456,7 @@ class ImagickImage extends AbstractImage
         $oDraw->setTextAlignment($aligns[$align]);
         $this->oImagick->annotateImage($oDraw, $left, $top, $angle, $text);
         return $this;
-    }catch(Exception $e){return $this->_error("Text can not be drawn");}}
+    }catch(\Exception $e){return $this->_error("Text can not be drawn");}}
     
     /**
      * Gets width of a text
@@ -474,7 +474,7 @@ class ImagickImage extends AbstractImage
         $oDraw->setStrokeColor('none');
         $metrics = $this->oImagick->queryFontMetrics($oDraw, $text);
         return $metrics['textWidth'];
-    }catch(Exception $e){return 0;}}
+    }catch(\Exception $e){return 0;}}
     
     /**
      * Gets height of upper case characters
@@ -491,7 +491,7 @@ class ImagickImage extends AbstractImage
         $oDraw->setStrokeColor('none');
         $metrics = $this->oImagick->queryFontMetrics($oDraw, 'I');
         return $metrics['characterHeight'];
-    }catch(Exception $e){return 0;}}
+    }catch(\Exception $e){return 0;}}
     
     /**
      * Draws a point
@@ -514,7 +514,7 @@ class ImagickImage extends AbstractImage
         }
         $this->oImagick->drawImage($oDraw);
         return $this;
-    }catch(Exception $e){return $this->_error("Point can not be drawn");}}
+    }catch(\Exception $e){return $this->_error("Point can not be drawn");}}
     
     /**
      * Draws a line
@@ -532,7 +532,7 @@ class ImagickImage extends AbstractImage
         $oDraw->line($left1, $top1, $left2, $top2);
         $this->oImagick->drawImage($oDraw);
         return $this;
-    }catch(Exception $e){return $this->_error("Line can not be drawn");}}
+    }catch(\Exception $e){return $this->_error("Line can not be drawn");}}
     
     /**
      * Draws a rectangle
@@ -549,7 +549,7 @@ class ImagickImage extends AbstractImage
         $oDraw->rectangle($left, $top, $left + $width - 1, $top + $height - 1);
         $this->oImagick->drawImage($oDraw);
         return $this;
-    }catch(Exception $e){return $this->_error("Rectangle can not be drawn");}}
+    }catch(\Exception $e){return $this->_error("Rectangle can not be drawn");}}
     
     /**
      * Draws a rectangle with rounded corners
@@ -571,7 +571,7 @@ class ImagickImage extends AbstractImage
         $oDraw->roundRectangle($left, $top, $left + $width - 1, $top + $height - 1,$radius, $verradius);
         $this->oImagick->drawImage($oDraw);
         return $this;
-    }catch(Exception $e){return $this->_error("Rounded rectangle can not be drawn");}}
+    }catch(\Exception $e){return $this->_error("Rounded rectangle can not be drawn");}}
     
     /**
      * Draws a circle
@@ -587,7 +587,7 @@ class ImagickImage extends AbstractImage
         $oDraw->circle($left, $top, $left, $top + $radius);
         $this->oImagick->drawImage($oDraw);
         return $this;
-    }catch(Exception $e){return $this->_error("Circle can not be drawn");}}
+    }catch(\Exception $e){return $this->_error("Circle can not be drawn");}}
     
     /**
      * Draws an ellipse
@@ -606,7 +606,7 @@ class ImagickImage extends AbstractImage
         $oDraw->ellipse($left + $rx, $top + $ry, $rx, $ry, 0, 360);
         $this->oImagick->drawImage($oDraw);
         return $this;
-    }catch(Exception $e){return $this->_error("Ellipse can not be drawn");}}
+    }catch(\Exception $e){return $this->_error("Ellipse can not be drawn");}}
     
     /**
      * Draws part of circle line
@@ -656,7 +656,7 @@ class ImagickImage extends AbstractImage
         $oDraw->arc($left, $top, $left + $width, $top + $height, $startangle, $endangle);
         $this->oImagick->drawImage($oDraw);
         return $this;
-    }catch(Exception $e){return $this->_error("Ellipse arc line can not be drawn");}}
+    }catch(\Exception $e){return $this->_error("Ellipse arc line can not be drawn");}}
     
     /**
      * Draws an ellipse sector
@@ -712,7 +712,7 @@ class ImagickImage extends AbstractImage
         }
         $this->oImagick->drawImage($oDraw);
         return $this;
-    }catch(Exception $e){return false;}}
+    }catch(\Exception $e){return false;}}
     
     /**
      * Draws bezier curve
@@ -739,7 +739,7 @@ class ImagickImage extends AbstractImage
         ]);
         $this->oImagick->drawImage($oDraw);
         return $this;
-    }catch(Exception $e){return $this->_error("Bezier curve can not be drawn");}}
+    }catch(\Exception $e){return $this->_error("Bezier curve can not be drawn");}}
     
     /**
      * Draws a polygon
@@ -753,7 +753,7 @@ class ImagickImage extends AbstractImage
         $oDraw->polygon($this->_create_pointarr($points));
         $this->oImagick->drawImage($oDraw);
         return $this;
-    }catch(Exception $e){return $this->_error("Polygon can not be drawn");}}
+    }catch(\Exception $e){return $this->_error("Polygon can not be drawn");}}
     
     /**
      * Runs fill from the given point
@@ -768,7 +768,7 @@ class ImagickImage extends AbstractImage
         $oDraw->color($left, $top, Imagick::PAINT_FLOODFILL);
         $this->oImagick->drawImage($oDraw);
         return $this;
-    }catch(Exception $e){return $this->_error("Image can not be filled");}}
+    }catch(\Exception $e){return $this->_error("Image can not be filled");}}
     
     /**
      * Apply an effect
@@ -792,7 +792,7 @@ class ImagickImage extends AbstractImage
             default:
                 return $this->_error("Unknown effect");
         }
-    }catch(Exception $e){return $this->_error("Effect can not be applied");}}
+    }catch(\Exception $e){return $this->_error("Effect can not be applied");}}
     
     /**
      * Paints on a specified pixel
@@ -827,7 +827,7 @@ class ImagickImage extends AbstractImage
         $oDraw->point($left, $top);
         $this->oImagick->drawImage($oDraw);
         return $this;
-    }catch(Exception $e){return $this->_error("Pixel can not be drawn");}}
+    }catch(\Exception $e){return $this->_error("Pixel can not be drawn");}}
     
     /**
      * Gets a pixel's color
@@ -839,7 +839,7 @@ class ImagickImage extends AbstractImage
     public function getPixel($left, $top)
     {try{
         return array_values($this->oImagick->getImagePixelColor($left, $top)->getColor());
-    }catch(Exception $e){return false;}}
+    }catch(\Exception $e){return false;}}
     
     /**
      * Prints image content
@@ -855,7 +855,7 @@ class ImagickImage extends AbstractImage
         $this->oImagick->setImageFormat($type);
         echo $this->oImagick;
         return true;
-    }catch(Exception $e){return $this->_error("Image can not be flushed");}}
+    }catch(\Exception $e){return $this->_error("Image can not be flushed");}}
     
     /**
      * Gets image content as binary string
@@ -867,7 +867,7 @@ class ImagickImage extends AbstractImage
     {try{
         $this->oImagick->setImageFormat($type);
         return '' . $this->oImagick;
-    }catch(Exception $e){return "";}}
+    }catch(\Exception $e){return "";}}
     
     /**
      * Saves image to file
@@ -887,7 +887,7 @@ class ImagickImage extends AbstractImage
         }
         $this->oImagick->writeImage($file);
         return $this;
-    }catch(Exception $e){return $this->_error("Image can not be saved");}}
+    }catch(\Exception $e){return $this->_error("Image can not be saved");}}
     
     /**
      * Frees allocated memory
@@ -901,7 +901,7 @@ class ImagickImage extends AbstractImage
         }
         $this->oImagick = null;
         return $this;
-    }catch(Exception $e){return $this->_error("Memory can not be clean");}}
+    }catch(\Exception $e){return $this->_error("Memory can not be clean");}}
     
     
     /* PRIVATES */

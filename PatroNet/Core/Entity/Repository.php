@@ -28,7 +28,7 @@ interface Repository extends \Countable
      * Gets multiple entities by IDs
      *
      * @param int[] $idList
-     * @return \PatroNet\Core\Entity\Entity[]|Iterable
+     * @return \PatroNet\Core\Entity\Entity[]|\Traversable
      */
     public function getAll($idList = null);
     

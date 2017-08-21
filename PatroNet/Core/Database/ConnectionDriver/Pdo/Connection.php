@@ -437,11 +437,11 @@ class Connection implements ConnectionInterface
     /**
      * Calls a callback enclosed with a transaction
      *
-     * @param callback $procedure
-     * @param callback $finally
+     * @param callable $procedure
+     * @param callable $finally
      * @param boolean $rethrowException
      * @param string $handleCurrent
-     * @throws Exception if an error occured
+     * @throws \Exception if an error occured
      * @return boolean
      */
     // FIXME/TODO: currently exceptions work with only execute (not with preparation or other operations)

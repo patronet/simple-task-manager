@@ -2,8 +2,6 @@
 
 namespace PatroNet\Core\Session;
 
-use PatroNet\Core\Session\Session;
-
 
 /**
  * Session manager

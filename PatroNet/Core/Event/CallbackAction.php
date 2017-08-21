@@ -12,7 +12,7 @@ class CallbackAction implements Action
     protected $callback;
     
     /**
-     * @param callback $callback
+     * @param callable $callback
      */
     public function __construct(callable $callback)
     {

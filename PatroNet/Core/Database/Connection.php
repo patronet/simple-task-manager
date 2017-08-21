@@ -150,8 +150,8 @@ interface Connection extends Resource, ErrorStatus
     /**
      * Calls a callback enclosed with a transaction
      *
-     * @param callback $procedure
-     * @param callback $finally
+     * @param callable $procedure
+     * @param callable $finally
      * @param boolean $rethrowException
      * @param string $handleCurrent
      * @throws Exception if an error occured
@@ -161,7 +161,7 @@ interface Connection extends Resource, ErrorStatus
         callable $procedure,
         callable $finally = null,
         $rethrowException = true,
-        $handleCurrent = ConnectionInterface::TRANSACTION_BEGIN_DEFAULT
+        $handleCurrent = self::TRANSACTION_BEGIN_DEFAULT
     );
     
     /**
