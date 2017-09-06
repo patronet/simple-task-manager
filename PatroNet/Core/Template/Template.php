@@ -15,7 +15,7 @@ interface Template extends Source
      * Enables or disables debug mode
      *
      * @param boolean $enable
-     * @return self;
+     * @return self
      */
     public function setDebug($enable = true);
     
@@ -24,7 +24,7 @@ interface Template extends Source
      *
      * @param string $variable
      * @param mixed $value
-     * @return self;
+     * @return self
      */
     public function assign($variable, $value);
     
@@ -32,7 +32,7 @@ interface Template extends Source
      * Assigns multiple variables to the template
      *
      * @param array $variables
-     * @return self;
+     * @return self
      */
     public function assignAll($variables);
     
