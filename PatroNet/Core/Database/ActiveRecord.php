@@ -326,7 +326,7 @@ class ActiveRecord implements \ArrayAccess, \IteratorAggregate
         if (is_null($this->id)) {
             return true;
         } else {
-            if (!$this->oTable->delete($this->id)) {
+            if (!$this->oTable->delete($this->id)->isSuccess()) {
                 return false;
             }
             $this->id = null;
