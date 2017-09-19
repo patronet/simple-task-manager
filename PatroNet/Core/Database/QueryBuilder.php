@@ -52,6 +52,21 @@ interface QueryBuilder
     public function getType();
     
     /**
+     * Sets that this select is distinct or not
+     *
+     * @param boolean $distinct
+     * @return self
+     */
+    public function setDistinct($distinct);
+    
+    /**
+     * Checks that this select is distinct or not
+     *
+     * @return boolean
+     */
+    public function isDistinct();
+    
+    /**
      * Initializes a SELECT query
      *
      * If an INSERT query is open, creates INSERT SELECT query.
@@ -60,6 +75,16 @@ interface QueryBuilder
      * @return self
      */
     public function select($fields = null);
+    
+    /**
+     * Initializes a SELECT DISTINCT query
+     *
+     * If an INSERT query is open, creates INSERT SELECT DISTINCT query.
+     *
+     * @param array|string|null $fields
+     * @return self
+     */
+    public function selectDistinct($fields = null);
     
     /**
      * Initializes a DELETE query

@@ -53,6 +53,28 @@ abstract class AbstractQueryBuilder implements QueryBuilder
     }
     
     /**
+     * Sets that this select is distinct or not
+     *
+     * @param boolean $distinct
+     * @return self
+     */
+    public function setDistinct($distinct)
+    {
+        $this->parts["distinct"] = true;
+        return $this;
+    }
+    
+    /**
+     * Checks that this select is distinct or not
+     *
+     * @return boolean
+     */
+    public function isDistinct()
+    {
+        return !empty($this->parts["distinct"]);
+    }
+    
+    /**
      * Initializes a SELECT query
      *
      * If an INSERT query is open, creates INSERT SELECT query.
@@ -74,6 +96,19 @@ abstract class AbstractQueryBuilder implements QueryBuilder
         }
         $this->parts["selectFields"] = $fields;
         return $this;
+    }
+    
+    /**
+     * Initializes a SELECT DISTINCT query
+     *
+     * If an INSERT query is open, creates INSERT SELECT DISTINCT query.
+     *
+     * @param array|string|null $fields
+     * @return self
+     */
+    public function selectDistinct($fields = null)
+    {
+        return $this->select($fields)->setDistinct(true);
     }
     
     /**

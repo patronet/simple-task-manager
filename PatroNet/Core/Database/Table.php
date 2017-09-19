@@ -7,6 +7,8 @@ use PatroNet\Core\Common\StringUtil;
 
 /**
  * Class for access data in a database table
+ * 
+ * @todo handle distinct selects
  */
 class Table implements \IteratorAggregate, \Countable
 {

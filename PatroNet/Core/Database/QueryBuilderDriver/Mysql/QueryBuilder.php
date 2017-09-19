@@ -135,6 +135,9 @@ class QueryBuilder extends AbstractQueryBuilder
             case QueryBuilderInterface::QUERYTYPE_SELECT:
             default:
                 $result .= "SELECT";
+                if ($this->isDistinct()) {
+                    $result .= " DISTINCT";
+                }
                 $result .= " " . (isset($this->parts["selectFields"])?$this->generateSelectFieldsPart($this->parts["selectFields"]):"*");
                 $baseTableAlias = isset($this->parts["baseTableAlias"]) ? $this->parts["baseTableAlias"] : null;
                 $result .= " FROM " . $this->generateBaseTablePart($this->parts["baseTable"], $baseTableAlias);
@@ -176,7 +179,8 @@ class QueryBuilder extends AbstractQueryBuilder
                 } elseif (is_array($value)) {
                     switch ($value[0]) {
                         case "aggregate":
-                            $selectItem = strtoupper($value[1]) . "(*)"; // FIXME ("escape"?)
+                            $subExpression = isset($value[2]) ? $this->generateSelectFieldsPart($value[2]) : "*";
+                            $selectItem = strtoupper($value[1]) . "(" . $subExpression . ")";
                             break;
                         case "expression":
                             // TODO
