@@ -131,14 +131,14 @@ class Table implements \IteratorAggregate, \Countable
     }
     
     /**
-     * Associates a relation with the table
+     * Adds a join
      *
      * @param string $alias
      * @param mixed $joinCondition
      * @param string|null $linkTo
      * @param string $joinType
      */
-    public function addRelation($alias, $joinCondition, $linkTo = null, $joinType = QueryBuilder::JOINTYPE_LEFT)
+    public function addJoin($alias, $joinCondition, $linkTo = null, $joinType = QueryBuilder::JOINTYPE_LEFT)
     {
         $tableName = is_null($linkTo) ? $alias : $linkTo;
         $this->relations[$alias] = [
@@ -147,6 +147,47 @@ class Table implements \IteratorAggregate, \Countable
             "detectedTableNames" => self::detectTableNamesInJoinCondition($joinCondition),
             "joinType" => $joinType,
         ];
+    }
+    
+    /**
+     * Adds a join
+     *
+     * @deprecated
+     * @param string $alias
+     * @param mixed $joinCondition
+     * @param string|null $linkTo
+     * @param string $joinType
+     */
+    public function addRelation($alias, $joinCondition, $linkTo = null, $joinType = QueryBuilder::JOINTYPE_LEFT)
+    {
+        $this->addJoin($alias, $joinCondition, $linkTo, $joinType);
+    }
+    
+    /**
+     * Add a simple join
+     *
+     * @param string $alias
+     * @param mixed $joinCondition
+     * @param string|null $linkTo
+     * @param string $joinType
+     */
+    public function addSimpleJoin($table, $field = null, $outerField = null, $joinType = QueryBuilder::JOINTYPE_LEFT)
+    {
+        if ($table instanceof Table) {
+            $oTable = $table;
+        } else {
+            $oTable = new Table($this->oConnection, $table, !is_null($field) ? $field : "id", $table);
+        }
+        $tableName = $oTable->getName();
+        $tableAlias = $oTable->getAlias();
+        if (is_null($outerField)) {
+            $outerField = $oTable->getUniqueKey();
+        }
+        if (is_null($field)) {
+            $field = $outerField;
+        }
+        $joinCondition[$this->tableAlias . "." . $field] = $tableAlias . "." . $outerField;
+        $this->addJoin($tableAlias, $joinCondition, $tableName, $joinType);
     }
     
     /**
