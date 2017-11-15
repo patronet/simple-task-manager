@@ -5,7 +5,6 @@ namespace PatroNet\SimpleTaskManager;
 
 use PatroNet\Core\Application\AbstractApplication;
 use PatroNet\Core\Database\ConnectionManager;
-use PatroNet\SimpleTaskManager\Build\BuildRunner;
 
 /**
  * Simple task manager application class
@@ -13,33 +12,72 @@ use PatroNet\SimpleTaskManager\Build\BuildRunner;
 class Application extends AbstractApplication
 {
 	
-	// XXX
 	private static $oConnection = null;
-
-	// XXX
-	private static $assetMap = null;
+    
+	private static $configs = [];
 	
-	// TODO
-	public function hello()
-	{
-		echo "Hello!";
-	}
-
 	/**
-	 * Shorthand for get default connection
+	 * Gets root directory
+	 *
+	 * @return string
+	 */
+	static public function root()
+	{
+	    return preg_replace('@(/[^/]+){4}$@', '', __DIR__);
+	}
+	
+	/**
+	 * Gets default connection
 	 *
 	 * @param string $name
 	 * @return \PatroNet\Core\Database\Connection
 	 */
 	static public function conn($name = "default")
 	{
-		// XXX / TODO
-		if (!isset(self::$oConnection)) {
-			$connectionString = "pdo.mysql://root:PNabc123@localhost/taskmanager?charset=utf8";
+		if (is_null(self::$oConnection)) {
+		    $connectionString = self::config("database")["connectionString"];
 			self::$oConnection = (new ConnectionManager())->create($connectionString);
 			self::$oConnection->open();
 		}
 		return self::$oConnection;
+	}
+	
+	/**
+	 * Gets some config data
+	 *
+	 * @param string $name
+	 * @throws \InvalidArgumentException when $name contains illegal characters
+	 * @return array
+	 */
+	static public function config($name)
+	{
+	    if (!preg_match('@^[a-zA-Z0-9\\-\\._]+$@', $name)) {
+	        throw new \InvalidArgumentException("Invalid config name: '{$name}'");
+	    }
+	    
+	    if (!array_key_exists($name, self::$configs)) {
+	        $configDirs = self::getConfigDirs();
+	        
+	        $config = [];
+	        foreach ($configDirs as $configDir) {
+	            $configFile = "{$configDir}/{$name}.yaml";
+	            if (file_exists($configFile)) {
+	                $config = array_merge($config, Util::yaml($configFile));
+    	        }
+	        }
+	        
+	        self::$configs[$name] = $config;
+	    }
+	    
+	    return self::$configs[$name];
+	}
+	
+	static private function getConfigDirs()
+	{
+	    return [
+	        self::root() . "/config-default",
+	        self::root() . "/config",
+        ];
 	}
 	
 }

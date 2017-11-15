@@ -1,0 +1,2 @@
+connectionString: "pdo.mysql://username:password@host/dbname?charset=utf8"
+tablePrefix: stm_

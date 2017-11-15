@@ -1,6 +1,6 @@
 <?php
 
-namespace PatroNet\SimpleTaskManager;
+namespace PatroNet\SimpleTaskManager\Model;
 
 use PatroNet\Core\Database\ActiveRecord;
 use PatroNet\Core\Entity\TableRepository;

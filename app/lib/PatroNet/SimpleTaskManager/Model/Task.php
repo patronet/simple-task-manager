@@ -1,22 +1,23 @@
 <?php
 
-namespace PatroNet\SimpleTaskManager;
+namespace PatroNet\SimpleTaskManager\Model;
 
 use PatroNet\Core\Entity\ActiveRecordEntity;
 use PatroNet\Core\Database\ActiveRecord;
 
 
 /**
- * Represents a project
+ * Represents a task
  */
-class Project extends ActiveRecordEntity
+class Task extends ActiveRecordEntity
 {
     
     const STATUS_CREATED = 'created';
-    const STATUS_ORDERED = 'ordered';
     const STATUS_PROGRESS = 'progress';
-    const STATUS_CANCELED = 'canceled';
-    const STATUS_COMPLETED = 'completed';
+    const STATUS_PAUSED = 'paused';
+    const STATUS_DEVELOPED = 'developed';
+    const STATUS_READY = 'ready';
+    const STATUS_ACCEPTED = 'accepted';
     
     private static $oRepository = null;
     
@@ -27,27 +28,13 @@ class Project extends ActiveRecordEntity
     }
 
     /**
-     * Gets sprints of this project
+     * Gets the sprint where this task is (if any)
      *
-     * @param string[string] $order
-     * @param mixed $limit
-     * @return Sprint[]|\PatroNet\Core\Database\ResultSet
+     * @return Sprint|null
      */
-    public function getSprints($order = null, $limit = null)
+    public function getSprint()
     {
-    	return Sprint::getRepository()->getAllByFilter(["project_id" => $this->getId()], $order, $limit);
-    }
-    
-    /**
-     * Creates a new sprint associated to this project
-     *
-     * @return Sprint
-     */
-    public function createSprint()
-    {
-    	$oSprint = Sprint::getRepository()->create();
-    	$oSprint->getActiveRecord()["project_id"] = $this->getId();
-    	return $oSprint;
+    	return Sprint::getRepository()->get($this->oActiveRecord["sprint_id"]);
     }
     
     public function setStatus($status)
@@ -73,7 +60,7 @@ class Project extends ActiveRecordEntity
     }
     
     /**
-     * Deletes this project
+     * Deletes this task
      * 
      * @return boolean
      */
@@ -85,14 +72,14 @@ class Project extends ActiveRecordEntity
     }
 
     /**
-     * Gets default project repository
+     * Gets default task repository
      *
-     * @return ProjectRepository
+     * @return TaskRepository
      */
     public static function getRepository()
     {
         if (is_null(self::$oRepository)) {
-            self::$oRepository = new ProjectRepository();
+            self::$oRepository = new TaskRepository();
         }
         return self::$oRepository;
     }

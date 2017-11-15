@@ -10,4 +10,4 @@ ini_set("display_errors", true);
 require_once(__DIR__ . "/../lib/patronet-core/autoload.php");
 require_once(__DIR__ . "/../app/autoload.php");
 
-(new ServiceController())->handle(new NormalRequest())->send();
+(new RestController())->handle(new NormalRequest())->send();

@@ -1,6 +1,6 @@
 <?php
 
-namespace PatroNet\SimpleTaskManager;
+namespace PatroNet\SimpleTaskManager\Model;
 
 use PatroNet\Core\Entity\ActiveRecordEntity;
 use PatroNet\Core\Database\ActiveRecord;
@@ -12,8 +12,7 @@ use PatroNet\Core\Database\ActiveRecord;
 class Sprint extends ActiveRecordEntity
 {
     
-    const STATUS_CREATED = 'created';
-    const STATUS_ORDERED = 'ordered';
+    const STATUS_INITIAL = 'initial';
     const STATUS_PROGRESS = 'progress';
     const STATUS_CANCELED = 'canceled';
     const STATUS_COMPLETED = 'completed';
