@@ -1,6 +1,6 @@
 <?php
 
 use PatroNet\Core\Autoload\Registrator;
-use PatroNet\Core\Autoload\Psr0Autoloader;
+use PatroNet\Core\Autoload\PathAutoloader;
 
-Registrator::register(new Psr0Autoloader('PatroNet\\SimpleTaskManager', __DIR__ . '/lib/PatroNet/SimpleTaskManager'));
+Registrator::register(new PathAutoloader('PatroNet\\SimpleTaskManager', __DIR__ . '/lib/PatroNet/SimpleTaskManager'));
