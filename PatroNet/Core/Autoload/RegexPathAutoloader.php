@@ -4,26 +4,29 @@ namespace PatroNet\Core\Autoload;
 
 
 /**
- * PSR0 like autoloader with custom pattern support
+ * Path resolution autoloader with custom pattern support
  */
-class RegexPsr0Autoloader implements FileAutoloader
+class RegexPathAutoloader implements FileAutoloader
 {
     use FileAutoloaderTrait;
     
     protected $searchPattern;
     protected $replacePattern;
     protected $replacement;
+    protected $underscoreToNested;
     
     /**
      * @param string $searchPattern
      * @param string $replacePattern
      * @param string|callable $replacement
+     * @param boolean $underscoreToNested
      */
-    public function __construct($searchPattern, $replacePattern, $replacement)
+    public function __construct($searchPattern, $replacePattern, $replacement, $underscoreToNested = true)
     {
         $this->searchPattern = $searchPattern;
         $this->replacePattern = $replacePattern;
         $this->replacement = $replacement;
+        $this->underscoreToNested = $underscoreToNested;
     }
     
     /**
@@ -43,8 +46,8 @@ class RegexPsr0Autoloader implements FileAutoloader
         } else {
             $path = preg_replace($this->replacePattern, $this->replacement, $namespace);
         }
-        $oPsr0Autoloader = new Psr0Autoloader($namespace, $path);
-        return $oPsr0Autoloader->getFile($classname);
+        $oPathAutoloader = new PathAutoloader($namespace, $path, $this->underscoreToNested);
+        return $oPathAutoloader->getFile($classname);
     }
     
 }

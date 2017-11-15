@@ -4,24 +4,26 @@ namespace PatroNet\Core\Autoload;
 
 
 /**
- * PSR0 standard autoloader
+ * Path resolution standard autoloader
  */
-class Psr0Autoloader implements FileAutoloader
+class PathAutoloader implements FileAutoloader
 {
     use FileAutoloaderTrait;
     
     protected $path;
-    
     protected $namespace;
+    protected $underscoreToNested;
     
     /**
      * @param string $namespace
      * @param string $path
+     * @param boolean $underscoreToNested
      */
-    public function __construct($namespace, $path)
+    public function __construct($namespace, $path, $underscoreToNested = true)
     {
         $this->path = preg_replace('#/$#', '', $path);
         $this->namespace = preg_replace('#(^\\\\|\\\\$)#', '', $namespace);
+        $this->underscoreToNested = $underscoreToNested;
     }
     
     /**
@@ -38,8 +40,14 @@ class Psr0Autoloader implements FileAutoloader
             return null;
         }
         
-        $relativename = substr($classname, $nslen + 1);
-        $file = $this->path . "/" . str_replace("\\", "/", $relativename) . ".php";
+        $relativeName = substr($classname, $nslen + 1);
+        $subPath = str_replace("\\", "/", $relativeName);
+        
+        if ($this->underscoreToNested) {
+            $subPath = preg_replace('#/_([^_].*)?$#', '', $subPath);
+        }
+        
+        $file = $this->path . "/" . $subPath . ".php";
         return $file;
     }
     
