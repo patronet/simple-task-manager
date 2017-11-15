@@ -4,12 +4,13 @@ namespace PatroNet\SimpleTaskManager\Model;
 
 use PatroNet\Core\Entity\ActiveRecordEntity;
 use PatroNet\Core\Database\ActiveRecord;
+use PatroNet\SimpleTaskManager\Rest\JsonDataEntity;
 
 
 /**
  * Represents a project
  */
-class Project extends ActiveRecordEntity
+class Project extends ActiveRecordEntity implements JsonDataEntity
 {
     
     const STATUS_INITIAL = 'initial';
@@ -82,18 +83,63 @@ class Project extends ActiveRecordEntity
     	
         return parent::delete();
     }
-
+    
+    public function toJsonData($entityViewQueryData)
+    {
+        // XXX
+        return [
+            "project" => $this->getActiveRecord()->getRow(),
+            "sprints" => Sprint::getRepository()->getJsonDataList(["project_id" => $this->getId()]),
+        ];
+    }
+    
     /**
      * Gets default project repository
      *
-     * @return ProjectRepository
+     * @return Project\_Repository
      */
     public static function getRepository()
     {
         if (is_null(self::$oRepository)) {
-            self::$oRepository = new ProjectRepository();
+            self::$oRepository = new Project\_Repository();
         }
         return self::$oRepository;
+    }
+    
+}
+
+namespace PatroNet\SimpleTaskManager\Model\Project;
+
+use PatroNet\SimpleTaskManager\Application;
+use PatroNet\Core\Database\ActiveRecord;
+use PatroNet\Core\Entity\TableRepository;
+use PatroNet\SimpleTaskManager\Model\Project;
+use PatroNet\SimpleTaskManager\Rest\JsonDataRepository;
+use PatroNet\SimpleTaskManager\Rest\JsonDataTableRepositoryTrait;
+
+/**
+ * @method Project create()
+ * @method Project get(mixed $id)
+ * @method Project[]|\PatroNet\Core\Database\ResultSet getAll(int[] $idList = null, string[string] $order = null, mixed $limit = null)
+ * @method Project[]|\PatroNet\Core\Database\ResultSet getAllByFilter(mixed $filter = null, string[string] $order = null, mixed $limit = null)
+ */
+class _Repository extends TableRepository implements JsonDataRepository
+{
+    use JsonDataTableRepositoryTrait;
+    
+    public function __construct()
+    {
+        parent::__construct($oTable = Application::conn()->getTable("stm_project", "project_id", "project"));
+        //$oTable->addRelation("[alias]", ["[table].[field]" => "[other table].[field]"], "[table name]");
+    }
+    
+    /**
+     * @param ActiveRecord $oActiveRecord
+     * @return Project
+     */
+    protected function wrapActiveRecordToEntity(ActiveRecord $oActiveRecord)
+    {
+        return new Project($oActiveRecord);
     }
     
 }

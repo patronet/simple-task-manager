@@ -4,12 +4,13 @@ namespace PatroNet\SimpleTaskManager\Model;
 
 use PatroNet\Core\Entity\ActiveRecordEntity;
 use PatroNet\Core\Database\ActiveRecord;
+use PatroNet\SimpleTaskManager\Rest\JsonDataEntity;
 
 
 /**
  * Represents a sprint
  */
-class Sprint extends ActiveRecordEntity
+class Sprint extends ActiveRecordEntity implements JsonDataEntity
 {
     
     const STATUS_INITIAL = 'initial';
@@ -92,18 +93,61 @@ class Sprint extends ActiveRecordEntity
     	
         return parent::delete();
     }
-
+    
+    public function toJsonData($entityViewQueryData)
+    {
+        return $this->getActiveRecord()->getRow();
+    }
+    
     /**
      * Gets default sprint repository
      *
-     * @return SprintRepository
+     * @return Sprint\_Repository
      */
     public static function getRepository()
     {
         if (is_null(self::$oRepository)) {
-            self::$oRepository = new SprintRepository();
+            self::$oRepository = new Sprint\_Repository();
         }
         return self::$oRepository;
     }
     
 }
+
+namespace PatroNet\SimpleTaskManager\Model\Sprint;
+
+use PatroNet\Core\Database\ActiveRecord;
+use PatroNet\Core\Entity\TableRepository;
+use PatroNet\SimpleTaskManager\Application;
+use PatroNet\SimpleTaskManager\Model\Sprint;
+use PatroNet\SimpleTaskManager\Rest\JsonDataRepository;
+use PatroNet\SimpleTaskManager\Rest\JsonDataTableRepositoryTrait;
+
+
+/**
+ * @method Sprint create()
+ * @method Sprint get(mixed $id)
+ * @method Sprint[]|\PatroNet\Core\Database\ResultSet getAll(int[] $idList = null, string[string] $order = null, mixed $limit = null)
+ * @method Sprint[]|\PatroNet\Core\Database\ResultSet getAllByFilter(mixed $filter = null, string[string] $order = null, mixed $limit = null)
+ */
+class _Repository extends TableRepository implements JsonDataRepository
+{
+    use JsonDataTableRepositoryTrait;
+    
+    public function __construct()
+    {
+        parent::__construct($oTable = Application::conn()->getTable("stm_sprint", "sprint_id", "sprint"));
+        //$oTable->addRelation("[alias]", ["[table].[field]" => "[other table].[field]"], "[table name]");
+    }
+    
+    /**
+     * @param ActiveRecord $oActiveRecord
+     * @return Sprint
+     */
+    protected function wrapActiveRecordToEntity(ActiveRecord $oActiveRecord)
+    {
+        return new Sprint($oActiveRecord);
+    }
+    
+}
+
