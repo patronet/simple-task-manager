@@ -84,7 +84,7 @@ class Project extends ActiveRecordEntity implements JsonDataEntity
         return parent::delete();
     }
     
-    public function toJsonData($entityViewQueryData)
+    public function toJsonData($entityViewParameters)
     {
         // XXX
         return [

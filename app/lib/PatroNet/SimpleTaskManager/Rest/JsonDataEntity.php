@@ -7,6 +7,6 @@ use PatroNet\Core\Entity\Entity;
 interface JsonDataEntity extends Entity
 {
     
-    public function toJsonData($entityViewQueryData);
+    public function toJsonData($entityViewParameters);
     
 }

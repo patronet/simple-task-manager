@@ -94,7 +94,7 @@ class Sprint extends ActiveRecordEntity implements JsonDataEntity
         return parent::delete();
     }
     
-    public function toJsonData($entityViewQueryData)
+    public function toJsonData($entityViewParameters)
     {
         return $this->getActiveRecord()->getRow();
     }

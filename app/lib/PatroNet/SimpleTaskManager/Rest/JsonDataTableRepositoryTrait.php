@@ -8,12 +8,12 @@ use PatroNet\Core\Database\Table;
 trait JsonDataTableRepositoryTrait
 {
     
-    public function getJsonDataList($filter = null, $orderBy = null, $limit = null, $entityViewQueryData = null)
+    public function getJsonDataList($filter = null, $orderBy = null, $limit = null, $entityViewParameters = null)
     {
-        $fetchCallback = function ($oActiveRecord) use ($entityViewQueryData) {
+        $fetchCallback = function ($oActiveRecord) use ($entityViewParameters) {
             $oEntity = $this->wrapActiveRecordToEntity($oActiveRecord);
             if ($oEntity instanceof JsonDataEntity) {
-                return $oEntity->toJsonData($entityViewQueryData);
+                return $oEntity->toJsonData($entityViewParameters);
             } else {
                 return $oActiveRecord->getRow();
             }
