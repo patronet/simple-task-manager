@@ -32,9 +32,6 @@ class RoutingJsonService implements JsonService
 }
 
 
-// TODO: match method...
-
-
 namespace PatroNet\SimpleTaskManager\Rest\JsonService;
 
 use PatroNet\Core\Request\Response;
