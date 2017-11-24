@@ -24,7 +24,7 @@ class MainJsonService extends RoutingJsonService {
             ;
         }));
             
-        $this->addRoute(new _MatchingPathRoute("all", "@foo/(?P<fooId>\\d+)@", function ($match, $method, $data, $oCredential) {
+        $this->addRoute(new _MatchingPathRoute("all", '@^foo/(?P<fooId>\\d+)$@', function ($match, $method, $data, $oCredential) {
             return
                 (new ResponseBuilder())
                 ->initJson(["fooId" => $match["fooId"]])
