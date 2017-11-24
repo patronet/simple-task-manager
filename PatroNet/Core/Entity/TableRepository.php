@@ -59,6 +59,10 @@ class TableRepository implements Repository
      */
     public function get($id)
     {
+        if (is_null($id)) {
+            return null;
+        }
+        
         $oActiveRecord = $this->oTable->getFirst($this->getRawFilterByIdOrIds($id), null, null, Table::FETCH_ACTIVE);
         if (empty($oActiveRecord)) {
             return null;
