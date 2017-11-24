@@ -439,7 +439,7 @@ class QueryBuilder extends AbstractQueryBuilder
     
     protected function generateLimitPart($limit)
     {
-        $maxLimit = 18446744073709551615;
+        $maxLimit = "18446744073709551615";
         if (is_array($limit)) {
             if (array_key_exists("from", $limit)) {
                 $limit_from = $limit["from"];
