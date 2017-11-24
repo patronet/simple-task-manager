@@ -27,14 +27,14 @@ class DefaultJsonServiceControllerAdapter implements Controller
         $method = $oRequest->getMethod();
         $data = $oRequest->getGet();
         
-        if (isset($getData["_path"])) {
-            $path = $getData["_path"];
-            unset($getData["_path"]);
+        if (isset($data["_path"])) {
+            $path = $data["_path"];
+            unset($data["_path"]);
         }
         
-        if (isset($getData["_method"])) {
-            $method = $getData["_method"];
-            unset($getData["_method"]);
+        if (isset($data["_method"])) {
+            $method = $data["_method"];
+            unset($data["_method"]);
         }
         
         // TODO: merge raw post json into data
