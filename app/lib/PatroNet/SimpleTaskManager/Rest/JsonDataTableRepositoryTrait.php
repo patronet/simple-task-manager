@@ -18,6 +18,7 @@ trait JsonDataTableRepositoryTrait
                 return $oActiveRecord->getRow();
             }
         };
+        // XXX filterable interface?
         return $this->getTable()->getAll($filter, $orderBy, $limit, null, ResultSet::FETCH_CALLBACK, $fetchCallback, Table::FETCH_ACTIVE)->fetchAll();
     }
     
