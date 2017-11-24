@@ -460,8 +460,9 @@ class QueryBuilder extends AbstractQueryBuilder
                     $limit_limit = 1;
                 }
                 $limit_from = $limit_limit * $limit_page;
-                $limit = $limit_from . ", " . $limit_limit;
-                return "" . $limit;
+                return "" . $limit_from . ", " . $limit_limit;
+            } elseif (array_key_exists("limit", $limit)) {
+                return "" . $limit["limit"];
             } else {
                 return "" . $maxLimit;
             } 
