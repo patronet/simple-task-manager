@@ -18,17 +18,17 @@ class RepositoryResponseHelper
     }
     
     // XXX
-    public function getDefaultListReponse($data, $oCredential)
+    public function getDefaultListResponse($data, $oCredential)
     {
         $filter = $this->extractFilter($data);
         $order = $this->extractOrder($data);
         $limit = $this->extractLimit($data);
         // TODO
-        return $this->getListReponse($filter, $order, $limit, null); // XXX
+        return $this->getListResponse($filter, $order, $limit, null); // XXX
     }
     
     // XXX
-    public function getListReponse($filter = null, $order = null, $limit = null, $entityViewParameters = null)
+    public function getListResponse($filter = null, $order = null, $limit = null, $entityViewParameters = null)
     {
         $totalCount = $this->oRepository->count($filter);
         $dataList = $this->oRepository->getJsonDataList($filter, $order, $limit, $entityViewParameters);

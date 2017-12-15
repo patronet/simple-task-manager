@@ -15,11 +15,11 @@ class MainJsonService extends RoutingJsonService {
     public function __construct() {
         
         $this->addRoute(new _ExactPathRoute("get", "projects", function ($method, $data, $oCredential) {
-            return (new RepositoryResponseHelper(Project::getRepository(), 20))->getDefaultListReponse($data, $oCredential);
+            return (new RepositoryResponseHelper(Project::getRepository(), 20))->getDefaultListResponse($data, $oCredential);
         }));
         
         $this->addRoute(new _ExactPathRoute("get", "sprints", function ($method, $data, $oCredential) {
-            return (new RepositoryResponseHelper(Sprint::getRepository(), 20))->getDefaultListReponse($data, $oCredential);
+            return (new RepositoryResponseHelper(Sprint::getRepository(), 20))->getDefaultListResponse($data, $oCredential);
         }));
         
         $this->addRoute(new _MatchingPathRoute("all", '@^foo/(?P<fooId>\\d+)$@', function ($match, $method, $data, $oCredential) {
