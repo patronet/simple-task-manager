@@ -1,10 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import StmApp from './StmApp';
+import App from './App';
+
 import './index.css';
 
-// XXX
-const serviceUrl = "/service.php";
-
-ReactDOM.render(<StmApp serviceUrl={serviceUrl} />, document.getElementById('root'));
-
+ReactDOM.render(<App />, document.getElementById('root'));
