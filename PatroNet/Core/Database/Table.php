@@ -455,7 +455,6 @@ class Table implements \IteratorAggregate, \Countable
                 } else {
                     $this->lastSaveId = null;
                 }
-                if($this->tableName=="Thematics_modules"){ ?><script>alert(<?= json_encode(json_encode($oQueryBuilder->generateQuery())) ?>);</script><?php }
                 return $oResult;
         }
         // FIXME:
