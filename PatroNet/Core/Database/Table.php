@@ -117,17 +117,7 @@ class Table implements \IteratorAggregate, \Countable
      */
     public function count($filter = null)
     {
-        // TODO
-        $tables = self::detectTableNames($filter, null, null);
-        
-        $oQueryBuilder = $this->oConnection->createQueryBuilder();
-        $oQueryBuilder
-            ->select([["aggregate", "count"]])
-            ->from($this->tableName, $this->tableAlias)
-            ->where($filter)
-        ;
-        $result = $oQueryBuilder->execute()->getResultSet()->fetch(ResultSet::FETCH_FIELD);
-        return intval($result);
+        return intval($this->getFirst($filter, null, [["aggregate", "count"]], ResultSet::FETCH_FIELD));
     }
     
     /**
