@@ -256,7 +256,7 @@ class Table implements \IteratorAggregate, \Countable
             $oQueryBuilder = $this->oConnection->createQueryBuilder();
             
             $oQueryBuilder
-                ->select($fields)
+                ->select($fields ? $fields : $selfFields)
                 ->from($this->tableName, $this->tableAlias)
                 ->where($filter)
                 ->orderBy($order)
