@@ -45,7 +45,7 @@ class PreparedStatement
         } else {
             $oPdo->setAttribute(\Pdo::ATTR_EMULATE_PREPARES, true);
             
-            // TODO: ezt általánosítani (a régi Wrame-megoldás alapján)
+            // TODO: make it more general (see the old solution from the Wrame framework)
             $firstpos = strpos($sql, ":");
             $lastpos = strrpos($sql, ":");
             $sameFound = false;
