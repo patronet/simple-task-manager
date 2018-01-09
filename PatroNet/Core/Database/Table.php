@@ -552,11 +552,19 @@ class Table implements \IteratorAggregate, \Countable
         }
         
         if (!is_null($queryOrder)) {
-            $items = array_merge($items, array_keys($queryOrder));
+            if (is_array($queryOrder)) {
+                $items = array_merge($items, array_keys($queryOrder));
+            } else if (is_string($queryOrder)) {
+                $items = array_merge($items, self::getItemsForTableNamesInString($queryOrder));
+            }
         }
         
-        if (!is_null($queryFields)) {
-            $items = array_merge($items, array_values($queryFields));
+        if (!is_null($queryFields) && is_array($queryFields)) {
+            if (is_array($queryFields)) {
+                $items = array_merge($items, array_values($queryFields));
+            } else if (is_string($queryFields)) {
+                $items = array_merge($items, self::getItemsForTableNamesInString($queryFields));
+            }
         }
         
         $detectedAliases = [];
@@ -574,6 +582,9 @@ class Table implements \IteratorAggregate, \Countable
     private static function getItemsForTableNamesInFilter($queryFilter)
     {
         $result = [];
+        if (is_string($queryFilter)) {
+            return self::getItemsForTableNamesInString($queryFilter);
+        }
         if ($queryFilter instanceof Filter) {
             $queryFilter = $queryFilter->toArray();
         }
@@ -591,6 +602,17 @@ class Table implements \IteratorAggregate, \Countable
             }
         }
         return $result;
+    }
+    
+    // XXX
+    private static function getItemsForTableNamesInString($sqlString)
+    {
+        $items = [];
+        preg_match_all('/(\\w+)\\W?\\.\\W?(\\w+)/', $sqlString, $matches, \PREG_SET_ORDER);
+        foreach ($matches as $match) {
+            $items[] = $match[1] . '.' . $match[2];
+        }
+        return $items;
     }
     
     private function detectTableNamesInJoinCondition($joinCondition)
