@@ -261,7 +261,7 @@ class QueryBuilder extends AbstractQueryBuilder
                 case "set":
                     $updateExpressions[] = $quotedField . "=" . "'" . implode(", ", array_map([$this, "escapeString"], $valueData)) . "'";
                     break;
-                // TODO
+                    // TODO
             }
         }
         return implode(", ", $updateExpressions);
@@ -345,18 +345,18 @@ class QueryBuilder extends AbstractQueryBuilder
                             $wheres[] = "$field NOT IN (" . implode(",", array_map([$this,"quote"], $compareValue)) . ")";
                             break;
                         case '^':
-                             $wheres[] = "$field LIKE '" . $this->escapeString($compareValue) . "%'";
+                            $wheres[] = "$field LIKE '" . $this->escapeString($compareValue) . "%'";
                             break;
                         case '$':
-                             $wheres[] = "$field LIKE '%" . $this->escapeString($compareValue) . "'";
+                            $wheres[] = "$field LIKE '%" . $this->escapeString($compareValue) . "'";
                             break;
                         case '^$':
                         case 'like':
-                             $wheres[] = "$field LIKE '" . $this->escapeString($compareValue) . "'";
+                            $wheres[] = "$field LIKE '" . $this->escapeString($compareValue) . "'";
                             break;
                         case '%':
                         case 'like%':
-                             $wheres[] = "$field LIKE '%" . $this->escapeString($compareValue) . "%'";
+                            $wheres[] = "$field LIKE '%" . $this->escapeString($compareValue) . "%'";
                             break;
                         case 'date':
                             if (is_int($compareValue)) {
@@ -466,7 +466,7 @@ class QueryBuilder extends AbstractQueryBuilder
                 return "" . $limit["limit"];
             } else {
                 return "" . $maxLimit;
-            } 
+            }
         } else {
             return "" . $limit;
         }
@@ -546,7 +546,7 @@ class QueryBuilder extends AbstractQueryBuilder
                     case ".":
                         return "`.`";
                     case "`";
-                        return "``";
+                    return "``";
                     default:
                         return $substr;
                 }
