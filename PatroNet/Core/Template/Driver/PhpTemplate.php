@@ -84,6 +84,7 @@ class PhpTemplate implements FileTemplate
     public function get()
     {
         ob_start();
+        $this->flush();
         $result = ob_get_contents();
         ob_end_clean();
         return $result;
