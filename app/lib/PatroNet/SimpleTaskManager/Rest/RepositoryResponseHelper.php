@@ -4,6 +4,7 @@ namespace PatroNet\SimpleTaskManager\Rest;
 
 use PatroNet\Core\Request\ResponseBuilder;
 
+// XXX rename and handle insert, update, delete
 class RepositoryResponseHelper
 {
     
@@ -11,31 +12,81 @@ class RepositoryResponseHelper
     
     private $defaultLimitCount;
     
+    
+    // XXX: parameters?
     public function __construct(JsonDataRepository $oRepository, $defaultLimitCount = null)
     {
         $this->oRepository = $oRepository;
         $this->defaultLimitCount = $defaultLimitCount;
     }
     
+    public function getRepository()
+    {
+        return $this->oRepository;
+    }
+    
     // XXX
-    public function getDefaultListResponse($data, $oCredential)
+    public function getDefaultListResponse($listUrl, $data, $oCredential)
     {
         $filter = $this->extractFilter($data);
         $order = $this->extractOrder($data);
         $limit = $this->extractLimit($data);
         // TODO
-        return $this->getListResponse($filter, $order, $limit, null); // XXX
+        return $this->getListResponse($listUrl, $filter, $order, $limit, null); // XXX
     }
     
     // XXX
-    public function getListResponse($filter = null, $order = null, $limit = null, $entityViewParameters = null)
+    public function getListResponse($listUrl, $filter = null, $order = null, $limit = null, $entityViewParameters = null)
     {
         $totalCount = $this->oRepository->count($filter);
         $dataList = $this->oRepository->getJsonDataList($filter, $order, $limit, $entityViewParameters);
+        $links = [];
+        $links[] = "<{$listUrl}>;rel=first;title=First page";
+        
+        if (!empty($limit["limit"])) {
+            $pageCount = ceil($totalCount / $limit["limit"]);
+            $lastPageNo = $pageCount - 1;
+            $links[] = "<" . $this->appendToUrl($listUrl, "page={$lastPageNo}") . ">;rel=last;title=Last page";
+        }
+        
         return
             (new ResponseBuilder())
             ->initJson($dataList)
             ->addHeader("X-Total-Count: {$totalCount}")
+            ->addHeader("X-Page-Count: {$pageCount}")
+            ->addHeader("Link: " . implode(",", $links))
+            ->build()
+        ;
+    }
+    
+    // XXX
+    public function getEntityResponse($entityId, $entityViewParameters = null)
+    {
+        $oEntity = $this->oRepository->get($entityId);
+        
+        if (empty($oEntity)) {
+            // FIXME: throw 404 exception?
+            return $this->getEntityNotFoundResponse();
+        }
+        
+        if ($oEntity instanceof JsonDataEntity) {
+            $entityData = $oEntity->toJsonData($entityViewParameters);
+        } else {
+            $entityData = $oEntity->getActiveRecord()->getRow();
+        }
+        
+        return
+            (new ResponseBuilder())
+            ->initJson($entityData)
+            ->build()
+        ;
+    }
+    
+    public function getEntityNotFoundResponse()
+    {
+        return (new ResponseBuilder())
+            ->initJson(["message" => "Entity not found"])
+            ->setHttpStatus(404)
             ->build()
         ;
     }
@@ -99,6 +150,12 @@ class RepositoryResponseHelper
         }
         
         return $result;
+    }
+    
+    private function appendToUrl($url, $additionalQuery)
+    {
+        $sign = strpos($url, '?') === false ? '?' : '&';
+        return $url . $sign . $additionalQuery;
     }
     
 }
