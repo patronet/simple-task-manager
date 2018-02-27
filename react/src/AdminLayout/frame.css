@@ -1,0 +1,23 @@
+html, body {
+    min-height: 100%;
+}
+
+.frame-outer {
+    min-height: 100%;
+}
+
+.frame-top {
+    box-sizing: border-box;
+    height: 50px !important;
+    padding: 10px;
+    background-color: black;
+    color: white;
+}
+
+.frame-page {
+    height: calc( 100vh - 50px );
+}
+
+.frame-side {
+    background-color: #1B1C1D;
+}
