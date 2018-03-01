@@ -14,6 +14,28 @@ class MainJsonService extends RoutingJsonService {
     
     public function __construct()
     {
+        $this->addRoute(new _ExactPathRoute("get", "dashboard", function ($method, $data, $oCredential) {
+            $currentDate = date("Y-m-d");
+            $activeProjectCount = Project::getRepository()->count([[[
+                ["status" => "progress"],
+                [[
+                    [
+                        ["has_startdate" => 0],
+                        ["date_startdate" => ["<=", $currentDate]]
+                    ],
+                    [
+                        ["has_duedate" => 0],
+                        ["date_duedate" => [">=", $currentDate]]
+                    ],
+                ]],
+            ]]]);
+            return
+                (new ResponseBuilder())
+                ->initJson(["activeProjectCount" => $activeProjectCount])
+                ->build()
+            ;
+        }));
+        
         // FIXME: pagination settings
         // FIXME: declarations...
         $this->addRepositoryService("projects", new RepositoryResponseHelper(Project::getRepository(), 2));
@@ -47,11 +69,7 @@ class MainJsonService extends RoutingJsonService {
                 if (!$oRepositoryResponseHelper->getRepository()->exists($match["entityId"])) {
                     return $oRepositoryResponseHelper->getEntityNotFoundResponse();
                 }
-                return
-                    (new ResponseBuilder())
-                    ->initJson(["message" => "Update {$path}:{$match["entityId"]}"])
-                    ->build()
-                ;
+                return $oRepositoryResponseHelper->handleUpdate($data, $match["entityId"]);
             }
         ));
         

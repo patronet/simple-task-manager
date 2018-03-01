@@ -16,8 +16,18 @@ html, body {
 
 .frame-page {
     height: calc( 100vh - 50px );
+    overflow: hidden;
 }
 
 .frame-side {
+    float: left;
+    height: calc( 100vh - 50px );
     background-color: #1B1C1D;
+}
+
+.frame-major {
+    overflow: auto;
+    box-sizing: border-box;
+    height: calc( 100vh - 50px );
+    padding: 15px;
 }

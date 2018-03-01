@@ -3,6 +3,8 @@ import update from 'react-addons-update';
 export default (state = [], action) => {
     if (action.type == 'REQUEST_PROJECTS') {
         return update(state, {mainProjectList: {isFetching: {$set: true}}});
+    } else if (action.type == 'REQUEST_PROJECT') {
+        return state;
     } else if (action.type == 'RECEIVE_PROJECTS') {
         let projectsUpdates = {};
         let projectIds = [];
@@ -15,12 +17,25 @@ export default (state = [], action) => {
         }
         return update(state, {
             mainProjectList: {
+                wasLoaded: {$set: true},
                 isFetching: {$set: false},
                 projectIds: {$set: projectIds},
                 pageCount: {$set: action.pageCount},
                 pageNo: {$set: action.pageNo}
             },
             projects: projectsUpdates
+        });
+    } else if (action.type == 'RECEIVE_PROJECT') {
+        return update(state, {
+            projects: {
+                [action.projectId]: {$set: action.projectContainer}
+            }
+        });
+    } else if (action.type == 'POST_PROJECT') {
+        return update(state, {
+            projects: {
+                [action.projectId]: action.updates
+            }
         });
     } else {
         return state;

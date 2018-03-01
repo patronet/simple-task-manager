@@ -25,10 +25,7 @@ class DefaultJsonServiceControllerAdapter implements Controller
     {
         $path = $oRequest->getPath();
         $method = $oRequest->getMethod();
-        $data = $oRequest->getGet();
-        
-        // TODO: data? post?
-        
+        $data = array_merge($oRequest->getGet(), $oRequest->getPost()); // XXX
         return $this->oJsonService->handleJsonQuery($path, $method, $data, null);
     }
     

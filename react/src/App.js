@@ -1,5 +1,5 @@
 import React from 'react';
-import Frame from './AdminLayout/Frame';
+import Frame from './ConnectedComponents/AdminLayout/Frame';
 
 export default class extends React.Component {
 

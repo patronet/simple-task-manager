@@ -39,6 +39,7 @@ CREATE TABLE `stm_project` (
   `project_id` int(11) NOT NULL AUTO_INCREMENT,
   `status` enum('initial','progress','canceled','completed') NOT NULL,
   `label` varchar(255) NOT NULL,
+  `description` text NOT NULL,
   `has_startdate` tinyint(1) NOT NULL,
   `date_startdate` date DEFAULT NULL,
   `has_duedate` tinyint(1) NOT NULL,

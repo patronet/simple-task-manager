@@ -3,6 +3,7 @@
 namespace PatroNet\SimpleTaskManager\Rest;
 
 use PatroNet\Core\Request\ResponseBuilder;
+use PatroNet\Core\Database\ActiveRecord;
 
 // XXX rename and handle insert, update, delete
 class RepositoryResponseHelper
@@ -89,6 +90,52 @@ class RepositoryResponseHelper
             ->setHttpStatus(404)
             ->build()
         ;
+    }
+    
+    // XXX: works with database based repositories only
+    public function handleUpdate($data, $entityId)
+    {
+        $oEntity = $this->oRepository->get($entityId);
+        
+        if (empty($oEntity)) {
+            // FIXME: throw 404 exception?
+            return $this->getEntityNotFoundResponse();
+        }
+        
+        // XXX
+        /** @var ActiveRecord $oActiveRecord */
+        $oActiveRecord = $oEntity->getActiveRecord();
+        foreach ($data as $key => $value) {
+            if (is_scalar($value)) {
+                $oActiveRecord[$key] = $value;
+            }
+        }
+        if ($oActiveRecord->commit()) {
+            return
+                (new ResponseBuilder())
+                ->initJson(["success" => true])
+                ->build()
+            ;
+        } else {
+            return
+                (new ResponseBuilder())
+                ->initJson([
+                    "success" => false,
+                    "message" => "Update failed", // XXX
+                ])
+                ->build()
+            ;
+        }
+    }
+    
+    public function handleCreate($data)
+    {
+        // TODO
+    }
+    
+    public function handleDelete($entityId)
+    {
+        // TODO
     }
     
     private function extractFilter($data)

@@ -37,7 +37,11 @@ class DefaultRestRequest implements Request
             $this->path = preg_replace('@^' . preg_quote($prefix, '@') . '/*@', '', $this->path);
         }
         
-        $this->post = $_POST;
+        if (!empty($_SERVER["CONTENT_TYPE"]) && preg_match('@^(text|application)/json(\\s*;.*)?$@', $_SERVER["CONTENT_TYPE"])) {
+            $this->post = json_decode(file_get_contents("php://input"), true);
+        } else {
+            $this->post = $_POST;
+        }
     }
     
     public function getPath()

@@ -1,24 +1,8 @@
 
-function requestProjects() {
-    return {
-        type: 'REQUEST_PROJECTS'
-    }
-}
+export function fetchProjects(dispatch, pageNo) {
+    dispatch({type: 'REQUEST_PROJECTS'});
 
-function receiveProjects(data) {
-    return {
-        type: 'RECEIVE_PROJECTS',
-        projects: data.projects,
-        pageCount: data.pageCount,
-        pageNo: data.pageNo,
-        receivedAt: Date.now()
-    }
-}
-
-export function fetchProjects(pageNo, dispatch) {
-    dispatch(requestProjects());
-
-    var result = {};
+    var headers = null;
 
     return (
         fetch('/api/projects?page=' + pageNo, {
@@ -28,13 +12,65 @@ export function fetchProjects(pageNo, dispatch) {
                 'Accept': 'text/json'
             })
         }).then(function(response) {
-            result.pageCount = response.headers.get("x-page-count");
+            headers = response.headers;
             return response.json();
         }).then(function(projects) {
-            result.projects = projects;
-            result.pageCount = result.pageCount;
-            result.pageNo = pageNo;
-            dispatch(receiveProjects(result));
+            dispatch({
+                type: 'RECEIVE_PROJECTS',
+                projects: projects,
+                pageCount: headers.get("x-page-count"),
+                pageNo: pageNo,
+                receivedAt: Date.now()
+            });
+        })
+    );
+}
+
+export function fetchProject(dispatch, projectId) {
+    dispatch({type: 'REQUEST_PROJECT'});
+
+    return (
+        fetch('/api/projects/' + projectId, {
+            method: 'GET',
+            credentials: "same-origin",
+            headers: new Headers({
+                'Accept': 'text/json'
+            })
+        }).then(function(response) {
+            return response.json();
+        }).then(function(projectContainer) {
+            dispatch({
+                type: 'RECEIVE_PROJECT',
+                projectId: projectContainer.project.project_id,
+                projectContainer: projectContainer,
+                receivedAt: Date.now()
+            });
+        })
+    );
+}
+
+export function postProject(dispatch, updates, changesToPost, projectId, callback) {
+    return (
+        fetch('/api/projects/' + projectId, {
+            method: 'POST',
+            credentials: "same-origin",
+            headers: new Headers({
+                'Content-type': 'text/json',
+                'Accept': 'text/json'
+            }),
+            body: JSON.stringify(changesToPost.project) // FIXME: full container?
+        }).then(function(response) {
+            return response.json();
+        }).then(function(projectContainer) {
+            dispatch({
+                type: 'POST_PROJECT',
+                projectId: projectId,
+                updates: updates,
+                changesToPost: changesToPost,
+            });
+            if (callback) {
+                callback();
+            }
         })
     );
 }

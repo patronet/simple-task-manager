@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { fetchProjects } from '../redux/projects/actions'
 import { Pagination, Table } from 'semantic-ui-react'
+import dataDefinitions from '../../dataDefinitions'
+import { fetchProjects } from '../../redux/projects/actions'
 
 export default connect(state => {
     return {
@@ -10,9 +11,15 @@ export default connect(state => {
     };
 }, dispatch => {
     return {
-        refetchProjects: (pageNo) => fetchProjects(pageNo, dispatch)
+        refetchProjects: (pageNo) => fetchProjects(dispatch, pageNo)
     };
 })(class extends React.Component {
+
+    componentWillMount() {
+        if (!this.props.mainProjectList.wasLoaded && !this.props.mainProjectList.isFetching) {
+            this.props.refetchProjects(this.props.mainProjectList.pageNo);
+        }
+    }
 
     render() {
         let projectItems = [];
@@ -23,8 +30,8 @@ export default connect(state => {
             projectItems.push(
                 <Table.Row key={project.project_id}>
                     <Table.Cell>{project.project_id}</Table.Cell>
-                    <Table.Cell><a href="#" onClick={(e) => {e.preventDefault();}}>{project.label}</a></Table.Cell>
-                    <Table.Cell>{project.status}</Table.Cell>
+                    <Table.Cell><a href="#" onClick={(e) => {e.preventDefault();this.props.onItemClicked(projectId);}}>{project.label}</a></Table.Cell>
+                    <Table.Cell>{dataDefinitions.project.projectStatusInfo[project.status].label}</Table.Cell>
                     <Table.Cell>{project.has_duedate == 1 ? project.has_duedate : "- - -"}</Table.Cell>
                 </Table.Row>
             );
@@ -33,7 +40,7 @@ export default connect(state => {
         return (
             <div>
                 <div>
-                    <button type="button" onClick={() => this.props.refetchProjects(this.props.mainProjectList.pageNo)}>Fetch list</button>
+                    <button type="button" onClick={() => this.props.refetchProjects(this.props.mainProjectList.pageNo)}>Lista frissítése</button>
                 </div>
                 <div>
                     <div>{this.props.mainProjectList.isFetching ? "Loading..." : ""}</div>
