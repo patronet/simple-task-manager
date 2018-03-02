@@ -1,3 +1,5 @@
+import store from '../../store'
+import { showMessage } from '../frame/actions'
 
 export function fetchProjects(dispatch, pageNo) {
     dispatch({type: 'REQUEST_PROJECTS'});
@@ -50,6 +52,19 @@ export function fetchProject(dispatch, projectId) {
 }
 
 export function postProject(dispatch, updates, changesToPost, projectId, callback) {
+    let originalState = store.getState();
+    let originalProjectContainer = originalState.projects.projects[projectId];
+
+    dispatch({
+        type: 'POST_PROJECT',
+        projectId: projectId,
+        updates: updates,
+        changesToPost: changesToPost,
+    });
+    if (callback) {
+        callback();
+    }
+
     return (
         fetch('/api/projects/' + projectId, {
             method: 'POST',
@@ -61,15 +76,16 @@ export function postProject(dispatch, updates, changesToPost, projectId, callbac
             body: JSON.stringify(changesToPost.project) // FIXME: full container?
         }).then(function(response) {
             return response.json();
-        }).then(function(projectContainer) {
-            dispatch({
-                type: 'POST_PROJECT',
-                projectId: projectId,
-                updates: updates,
-                changesToPost: changesToPost,
-            });
-            if (callback) {
-                callback();
+        }).then(function(result) {
+            if (!result.success) {
+                showMessage(dispatch, result.message, "Hiba a mentéskor", "error");
+                dispatch({
+                    type: 'POST_PROJECT_FAIL',
+                    message: result.message,
+                    projectId: projectId,
+                    originalProjectContainer: originalProjectContainer,
+                });
+                return;
             }
         })
     );

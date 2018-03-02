@@ -37,6 +37,12 @@ export default (state = [], action) => {
                 [action.projectId]: action.updates
             }
         });
+    } else if (action.type == 'POST_PROJECT_FAIL') {
+        return update(state, {
+            projects: {
+                [action.projectId]: {$set: action.originalProjectContainer}
+            }
+        });
     } else {
         return state;
     }

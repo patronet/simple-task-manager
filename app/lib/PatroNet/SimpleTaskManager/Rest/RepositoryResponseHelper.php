@@ -122,7 +122,7 @@ class RepositoryResponseHelper
                 (new ResponseBuilder())
                 ->initJson([
                     "success" => false,
-                    "message" => $oConnection->getPlatformErrorDescription(),
+                    "message" => "Az adatbázis hibaüzenete: " . $oConnection->getPlatformErrorDescription(),
                 ])
                 ->build()
             ;

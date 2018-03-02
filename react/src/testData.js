@@ -1,5 +1,11 @@
 export default {
     frame: {
+        modal: {
+            isOpen: false,
+            modalType: "info",
+            title: "A message",
+            content: "Hello!",
+        },
         side: {
             visible: true,
             minimized: false,

@@ -1,5 +1,27 @@
 
 export default {
+    frame: {
+        modal: {
+            modalTypeInfo: {
+                "info": {
+                    icon: "info circle",
+                    color: "blue",
+                },
+                "help": {
+                    icon: "help circle",
+                    color: "blue",
+                },
+                "warning": {
+                    icon: "warning sign",
+                    color: "orange",
+                },
+                "error": {
+                    icon: "warning circle",
+                    color: "red",
+                },
+            }
+        },
+    },
     project: {
         projectStatuses: ["initial", "progress", "canceled", "completed"],
         projectStatusInfo: {
