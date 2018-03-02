@@ -117,11 +117,12 @@ class RepositoryResponseHelper
                 ->build()
             ;
         } else {
+            $oConnection = $oActiveRecord->getTable()->getConnection();
             return
                 (new ResponseBuilder())
                 ->initJson([
                     "success" => false,
-                    "message" => "Update failed", // XXX
+                    "message" => $oConnection->getPlatformErrorDescription(),
                 ])
                 ->build()
             ;

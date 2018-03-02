@@ -369,7 +369,6 @@ abstract class AbstractQueryBuilder implements QueryBuilder
         if (is_null($oConnection)) {
             $oConnection = $this->oConnection;
         }
-        return $oConnection->execute($this->generateQuery());
-    }
+        return $oConnection->execute($this->generateQuery());    }
     
 }

@@ -41,9 +41,9 @@ class PreparedStatement
         $oQueryBuilder = $oConnection->createQueryBuilder();
         // FIXME:
         if ($native) {
-            $oPdo->setAttribute(\Pdo::ATTR_EMULATE_PREPARES, false);
+            $oPdo->setAttribute(\Pdo::ATTR_EMULATE_PREPARES, false); // XXX
         } else {
-            $oPdo->setAttribute(\Pdo::ATTR_EMULATE_PREPARES, true);
+            $oPdo->setAttribute(\Pdo::ATTR_EMULATE_PREPARES, true); // XXX
             
             // TODO: make it more general (see the old solution from the Wrame framework)
             $firstpos = strpos($sql, ":");

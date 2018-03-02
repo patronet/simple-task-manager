@@ -252,7 +252,8 @@ class ResultSet implements ResultSetInterface
      * @param boolean $reset
      * @return mixed[]
      */
-    public function fetchAll($mode = null, $param1 = null, $param2 = null, $reset = true) {
+    public function fetchAll($mode = null, $param1 = null, $param2 = null, $reset = true)
+    {
         if (is_null($mode)) {
             $fetchMode = $this->fetchMode;
             $fetchParam1 = $this->fetchParam1;

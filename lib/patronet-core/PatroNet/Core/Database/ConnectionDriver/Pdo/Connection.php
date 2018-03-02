@@ -7,6 +7,7 @@ use PatroNet\Core\Database\ConnectionManager;
 use PatroNet\Core\Database\Connection as ConnectionInterface;
 use PatroNet\Core\Database\Exception as DatabaseException;
 use PatroNet\Core\Database\Table;
+use PatroNet\Core\Database\ErrorContainer;
 
 
 /**
@@ -111,6 +112,7 @@ class Connection implements ConnectionInterface
         
         try {
             $this->oPdo = new \PDO($dsn, $c["username"], $c["password"]);
+            $this->oPdo->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
         } catch (\PDOException $oException) {
             $this->oPdoConnectException = $oException;
             return false;
@@ -211,12 +213,25 @@ class Connection implements ConnectionInterface
         if ($this->isInTransaction()) {
             $this->oPdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         }
+        $wasPreparesEmulated = $this->oPdo->getAttribute(\PDO::ATTR_EMULATE_PREPARES);
+        if ($wasPreparesEmulated) {
+            $this->oPdo->setAttribute(\Pdo::ATTR_EMULATE_PREPARES, false);
+        }
         $oPdoStatement = $this->oPdo->prepare($sql);
-        $oPdoStatement->execute();
+        if (empty($oPdoStatement)) {
+            $oPdoStatement = null;
+            $oErrorContainer = ErrorContainer::fromErrorStatus($this);
+        } else {
+            $oPdoStatement->execute();
+            $oErrorContainer = null;
+        }
         if ($this->isInTransaction()) {
             $this->oPdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_SILENT);
         }
-        return new Result($this, $oPdoStatement);
+        if ($wasPreparesEmulated) {
+            $this->oPdo->setAttribute(\PDO::ATTR_EMULATE_PREPARES, $wasPreparesEmulated);
+        }
+        return new Result($this, $oPdoStatement, $oErrorContainer);
     }
     
     /**

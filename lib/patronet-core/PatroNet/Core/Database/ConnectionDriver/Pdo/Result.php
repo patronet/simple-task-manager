@@ -3,23 +3,45 @@
 namespace PatroNet\Core\Database\ConnectionDriver\Pdo;
 
 
+use PatroNet\Core\Database\ErrorContainer;
+use PatroNet\Core\Database\EmptyResultSet;
+
 /**
  * PDO query result handler
  */
 class Result implements \PatroNet\Core\Database\Result
 {
     
+    protected $oConnection;
+    
     protected $oPdoStatement;
+    
+    protected $oErrorContainer;
     
     private $lastInsertId;
     
     /**
      * @param \PDOStatement $oPdoStatement
      */
-    public function __construct(Connection $oConnection, \PDOStatement $oPdoStatement)
+    public function __construct(Connection $oConnection, \PDOStatement $oPdoStatement = null, ErrorContainer $oErrorContainer = null)
     {
+        $this->oConnection = $oConnection;
         $this->oPdoStatement = $oPdoStatement;
-        $this->lastInsertId = $oConnection->getLastInsertId();
+        $this->oErrorContainer = $oErrorContainer;
+        
+        // XXX: query for last insert id resets error messages
+        $precalculatedSuccess = $this->isSuccess();
+        $this->lastInsertId = $precalculatedSuccess ? $oConnection->getLastInsertId() : null;
+    }
+    
+    /**
+     * Gets the connection associated to this result
+     *
+     * @return Connection|null
+     */
+    public function getConnection()
+    {
+        return $this->oConnection;
     }
     
     /**
@@ -29,8 +51,7 @@ class Result implements \PatroNet\Core\Database\Result
      */
     public function isSuccess()
     {
-        // FIXME
-        return ($this->oPdoStatement->errorCode() == "00000");
+        return ($this->getSqlState() == "00000");
     }
     
     /**
@@ -50,6 +71,9 @@ class Result implements \PatroNet\Core\Database\Result
      */
     public function getSqlState()
     {
+        if (!is_null($this->oErrorContainer)) {
+            return $this->oErrorContainer->getSqlState();
+        }
         return $this->oPdoStatement->errorCode();
     }
     
@@ -60,6 +84,9 @@ class Result implements \PatroNet\Core\Database\Result
      */
     public function getPlatformErrorCode()
     {
+        if (!is_null($this->oErrorContainer)) {
+            return $this->oErrorContainer->getPlatformErrorCode();
+        }
         return $this->oPdoStatement->errorInfo()[1];
     }
     
@@ -70,6 +97,9 @@ class Result implements \PatroNet\Core\Database\Result
      */
     public function getPlatformErrorDescription()
     {
+        if (!is_null($this->oErrorContainer)) {
+            return $this->oErrorContainer->getPlatformErrorDescription();
+        }
         return $this->oPdoStatement->errorInfo()[2];
     }
     
@@ -80,6 +110,9 @@ class Result implements \PatroNet\Core\Database\Result
      */
     public function getResultSet()
     {
+        if (is_null($this->oPdoStatement)) {
+            return new EmptyResultSet();
+        }
         return new ResultSet($this->oPdoStatement);
     }
     

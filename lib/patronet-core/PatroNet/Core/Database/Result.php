@@ -30,4 +30,11 @@ interface Result extends ErrorStatus
      */
     public function getLastInsertId();
     
+    /**
+     * Gets the connection associated to this result
+     *
+     * @return Connection|null
+     */
+    public function getConnection();
+    
 }
