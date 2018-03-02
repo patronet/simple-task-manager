@@ -91,6 +91,11 @@ interface Connection extends Resource, ErrorStatus
      */
     public function quoteIdentifier($str);
     
+    // TODO deprecate and rename to quoteIdentifierPart
+    //   also affects:
+    //   PatroNet\Core\Database\ConnectionDriver\Pdo\Connection
+    //   PatroNet\Core\Database\QueryBuilder
+    //   PatroNet\Core\Database\QueryBuilderDriver\Mysql\QueryBuilder
     /**
      * Quotes an atomic identifier name
      *

@@ -93,7 +93,7 @@ class QueryBuilder extends AbstractQueryBuilder
                     $oSelectQueryBuilder->parts = $this->parts;
                     $result .= " " . $oSelectQueryBuilder->generateQuery();
                 } else {
-                    $result .= " VALUES (" . implode(", ", array_map([$this, "quote"], $valueList)) . ")"; // FIXME
+                    $result .= " VALUES (" . implode(", ", array_map([$this, "quote"], $valueList)) . ")";
                 }
                 break;
             case QueryBuilderInterface::QUERYTYPE_DELETE:
@@ -261,7 +261,7 @@ class QueryBuilder extends AbstractQueryBuilder
                 case "set":
                     $updateExpressions[] = $quotedField . "=" . "'" . implode(", ", array_map([$this, "escapeString"], $valueData)) . "'";
                     break;
-                // TODO
+                    // TODO
             }
         }
         return implode(", ", $updateExpressions);
@@ -345,18 +345,18 @@ class QueryBuilder extends AbstractQueryBuilder
                             $wheres[] = "$field NOT IN (" . implode(",", array_map([$this,"quote"], $compareValue)) . ")";
                             break;
                         case '^':
-                             $wheres[] = "$field LIKE '" . $this->escapeString($compareValue) . "%'";
+                            $wheres[] = "$field LIKE '" . $this->escapeString($compareValue) . "%'";
                             break;
                         case '$':
-                             $wheres[] = "$field LIKE '%" . $this->escapeString($compareValue) . "'";
+                            $wheres[] = "$field LIKE '%" . $this->escapeString($compareValue) . "'";
                             break;
                         case '^$':
                         case 'like':
-                             $wheres[] = "$field LIKE '" . $this->escapeString($compareValue) . "'";
+                            $wheres[] = "$field LIKE '" . $this->escapeString($compareValue) . "'";
                             break;
                         case '%':
                         case 'like%':
-                             $wheres[] = "$field LIKE '%" . $this->escapeString($compareValue) . "%'";
+                            $wheres[] = "$field LIKE '%" . $this->escapeString($compareValue) . "%'";
                             break;
                         case 'date':
                             if (is_int($compareValue)) {
@@ -406,12 +406,13 @@ class QueryBuilder extends AbstractQueryBuilder
         }
     }
     
+    // FIXME: should we support indexes? (GROUP BY 1)
     protected function generateGroupByPart($groupBy)
     {
         if (is_array($groupBy)) {
             return implode(", ", array_map([$this, "quoteIdentifier"], $groupBy)); // FIXME: group by expression
         } else {
-            return "".$groupBy; // FIXME
+            return "" . $groupBy;
         }
     }
     
@@ -465,7 +466,7 @@ class QueryBuilder extends AbstractQueryBuilder
                 return "" . $limit["limit"];
             } else {
                 return "" . $maxLimit;
-            } 
+            }
         } else {
             return "" . $limit;
         }
@@ -473,7 +474,6 @@ class QueryBuilder extends AbstractQueryBuilder
     
     protected function resolveSpecialValue($value)
     {
-        // FIXME: DateTimeInterface introduced in PHP 5.5
         if (is_object($value) && ($value instanceof \DateTime || $value instanceof \DateTimeInterface)) {
             $value = $value->format("Y-m-d H:i:s");
         }
@@ -533,7 +533,6 @@ class QueryBuilder extends AbstractQueryBuilder
      */
     public function quoteIdentifier($str)
     {
-        // FIXME
         if ($this->oConnection) {
             return $this->oConnection->quoteIdentifier($str);
         } else {
@@ -547,7 +546,7 @@ class QueryBuilder extends AbstractQueryBuilder
                     case ".":
                         return "`.`";
                     case "`";
-                        return "``";
+                    return "``";
                     default:
                         return $substr;
                 }
@@ -563,7 +562,6 @@ class QueryBuilder extends AbstractQueryBuilder
      */
     public function quoteIdentifierRaw($str)
     {
-        // FIXME
         if ($this->oConnection) {
             return $this->oConnection->quoteIdentifierRaw($str);
         } else {
