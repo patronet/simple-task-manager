@@ -4,6 +4,7 @@ namespace PatroNet\SimpleTaskManager\Rest;
 
 use PatroNet\Core\Request\ResponseBuilder;
 use PatroNet\Core\Database\ActiveRecord;
+use PatroNet\Core\Entity\ActiveRecordEntity;
 
 // XXX rename and handle insert, update, delete
 class RepositoryResponseHelper
@@ -67,7 +68,7 @@ class RepositoryResponseHelper
         
         if (empty($oEntity)) {
             // FIXME: throw 404 exception?
-            return $this->getEntityNotFoundResponse();
+            return $this->getEntityNotFoundResponse($entityId);
         }
         
         if ($oEntity instanceof JsonDataEntity) {
@@ -83,26 +84,39 @@ class RepositoryResponseHelper
         ;
     }
     
-    public function getEntityNotFoundResponse()
+    public function getEntityNotFoundResponse($entityId)
     {
         return (new ResponseBuilder())
-            ->initJson(["message" => "Entity not found"])
+            ->initJson([
+                "success" => false,
+                "message" => "Entity not found",
+                "entityId" => $entityId,
+            ])
             ->setHttpStatus(404)
             ->build()
         ;
     }
     
-    // XXX: works with database based repositories only
     public function handleUpdate($data, $entityId)
     {
         $oEntity = $this->oRepository->get($entityId);
         
         if (empty($oEntity)) {
-            // FIXME: throw 404 exception?
-            return $this->getEntityNotFoundResponse();
+            return $this->getEntityNotFoundResponse($entityId);
         }
         
-        // XXX
+        return $this->handleApply($oEntity, $data);
+    }
+    
+    public function handleCreate($data)
+    {
+        $oEntity = $this->oRepository->create();
+        return $this->handleApply($oEntity, $data, true);
+    }
+    
+    private function handleApply($oEntity, $data, $includeEntityData = false, $entityViewParameters = null)
+    {
+        // XXX: works with database based repositories only
         /** @var ActiveRecord $oActiveRecord */
         $oActiveRecord = $oEntity->getActiveRecord();
         foreach ($data as $key => $value) {
@@ -110,10 +124,19 @@ class RepositoryResponseHelper
                 $oActiveRecord[$key] = $value;
             }
         }
-        if ($oActiveRecord->commit()) {
+        if ($oEntity->save()) {
+            $resultData = ["success" => true];
+            if ($includeEntityData) {
+                if ($oEntity instanceof JsonDataEntity) {
+                    $entityData = $oEntity->toJsonData($entityViewParameters);
+                } else {
+                    $entityData = $oEntity->getActiveRecord()->getRow();
+                }
+                $resultData["entity"] = $entityData;
+            }
             return
                 (new ResponseBuilder())
-                ->initJson(["success" => true])
+                ->initJson($resultData)
                 ->build()
             ;
         } else {
@@ -129,14 +152,37 @@ class RepositoryResponseHelper
         }
     }
     
-    public function handleCreate($data)
-    {
-        // TODO
-    }
-    
     public function handleDelete($entityId)
     {
-        // TODO
+        $oEntity = $this->oRepository->get($entityId);
+        
+        if (empty($oEntity)) {
+            return $this->getEntityNotFoundResponse($entityId);
+        }
+        
+        $success = false;
+        if ($oEntity instanceof ActiveRecordEntity) {
+            $success = $oEntity->delete();
+        } else {
+            $success = true;
+        }
+        
+        if (!$success) {
+            return
+                (new ResponseBuilder())
+                ->initJson([
+                    "success" => false,
+                    "message" => "Sikertelen törlés az adatbázisból",
+                ])
+                ->build()
+            ;
+        }
+        
+        return
+            (new ResponseBuilder())
+            ->initJson(["success" => true])
+            ->build()
+        ;
     }
     
     private function extractFilter($data)

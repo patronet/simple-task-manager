@@ -42,6 +42,10 @@ class DefaultRestRequest implements Request
         } else {
             $this->post = $_POST;
         }
+        
+        if (empty($this->post)) {
+            $this->post = [];
+        }
     }
     
     public function getPath()

@@ -50,39 +50,34 @@ class MainJsonService extends RoutingJsonService {
         }));
         
         $this->addRoute(new _MatchingPathRoute("get", '@^' . preg_quote($path, '@') . '/(?P<entityId>\\d+)$@', function ($match, $method, $data, $oCredential) use ($oRepositoryResponseHelper) {
-            if (!$oRepositoryResponseHelper->getRepository()->exists($match["entityId"])) {
-                return $oRepositoryResponseHelper->getEntityNotFoundResponse();
+            $entityId = $match["entityId"];
+            if (!$oRepositoryResponseHelper->getRepository()->exists($entityId)) {
+                return $oRepositoryResponseHelper->getEntityNotFoundResponse($entityId);
             }
-            return $oRepositoryResponseHelper->getEntityResponse($match["entityId"]);
+            return $oRepositoryResponseHelper->getEntityResponse($entityId);
         }));
         
         $this->addRoute(new _ExactPathRoute("post", $path, function ($method, $data, $oCredential) use ($path, $oRepositoryResponseHelper) {
-            return
-                (new ResponseBuilder())
-                ->initJson(["message" => "Insert into {$path}"])
-                ->build()
-            ;
+            return $oRepositoryResponseHelper->handleCreate($data);
         }));
         
         $this->addRoute(new _MatchingPathRoute("post", '@^' . preg_quote($path, '@') . '/(?P<entityId>\\d+)$@',
             function ($match, $method, $data, $oCredential) use ($path, $oRepositoryResponseHelper) {
-                if (!$oRepositoryResponseHelper->getRepository()->exists($match["entityId"])) {
-                    return $oRepositoryResponseHelper->getEntityNotFoundResponse();
+                $entityId = $match["entityId"];
+                if (!$oRepositoryResponseHelper->getRepository()->exists($entityId)) {
+                    return $oRepositoryResponseHelper->getEntityNotFoundResponse($entityId);
                 }
-                return $oRepositoryResponseHelper->handleUpdate($data, $match["entityId"]);
+                return $oRepositoryResponseHelper->handleUpdate($data, $entityId);
             }
         ));
         
         $this->addRoute(new _MatchingPathRoute("delete", '@^' . preg_quote($path, '@') . '/(?P<entityId>\\d+)$@',
             function ($match, $method, $data, $oCredential) use ($path, $oRepositoryResponseHelper) {
-                if (!$oRepositoryResponseHelper->getRepository()->exists($match["entityId"])) {
-                    return $oRepositoryResponseHelper->getEntityNotFoundResponse();
+                $entityId = $match["entityId"];
+                if (!$oRepositoryResponseHelper->getRepository()->exists($entityId)) {
+                    return $oRepositoryResponseHelper->getEntityNotFoundResponse($entityId);
                 }
-                return
-                    (new ResponseBuilder())
-                    ->initJson(["message" => "Delete {$path}:{$match["entityId"]}"])
-                    ->build()
-                ;
+                return $oRepositoryResponseHelper->handleDelete($entityId);
             }
         ));
         

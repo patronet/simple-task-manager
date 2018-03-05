@@ -45,7 +45,7 @@ class Sprint extends ActiveRecordEntity implements JsonDataEntity
      */
     public function getTasks($order = null, $limit = null)
     {
-    	return Task::getRepository()->getAllByFilter(["task_id" => $this->getId()], $order, $limit);
+    	return Task::getRepository()->getAllByFilter(["sprint_id" => $this->getId()], $order, $limit);
     }
     
     /**
@@ -55,8 +55,9 @@ class Sprint extends ActiveRecordEntity implements JsonDataEntity
      */
     public function createTask()
     {
-    	$oTask = Task::getRepository()->create();
-    	$oTask->getActiveRecord()["sprint_id"] = $this->getId();
+        $oTask = Task::getRepository()->create();
+        $oTask->getActiveRecord()["project_id"] = $this->getActiveRecord()["project_id"];
+        $oTask->getActiveRecord()["sprint_id"] = $this->getId();
     	return $oTask;
     }
     

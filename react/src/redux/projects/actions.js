@@ -1,7 +1,12 @@
 import store from '../../store'
 import { showMessage } from '../frame/actions'
 
-export function fetchProjects(dispatch, pageNo) {
+export function fetchProjects(dispatch, pageNo = null) {
+    if (pageNo === null) {
+        let state = store.getState();
+        pageNo = state.projects.mainProjectList.pageNo || 0;
+    }
+
     dispatch({type: 'REQUEST_PROJECTS'});
 
     var headers = null;
@@ -17,13 +22,35 @@ export function fetchProjects(dispatch, pageNo) {
             headers = response.headers;
             return response.json();
         }).then(function(projects) {
-            dispatch({
-                type: 'RECEIVE_PROJECTS',
-                projects: projects,
-                pageCount: headers.get("x-page-count"),
-                pageNo: pageNo,
-                receivedAt: Date.now()
-            });
+            let pageCount = headers.get("x-page-count");
+
+            var doDispatch = (projects, pageNo) => {
+                dispatch({
+                    type: 'RECEIVE_PROJECTS',
+                    projects: projects,
+                    pageCount: pageCount,
+                    pageNo: pageNo,
+                    receivedAt: Date.now()
+                });
+            };
+
+            if (pageCount > 0 && pageNo >= pageCount) {
+                let manipulatedPageNo = pageCount - 1;
+
+                fetch('/api/projects?page=' + manipulatedPageNo, {
+                    method: 'GET',
+                    credentials: "same-origin",
+                    headers: new Headers({
+                        'Accept': 'text/json'
+                    })
+                }).then(function(response) {
+                    return response.json();
+                }).then(function(projects) {
+                    doDispatch(projects, manipulatedPageNo);
+                });
+            }
+
+            doDispatch(projects, pageNo);
         })
     );
 }
@@ -51,7 +78,7 @@ export function fetchProject(dispatch, projectId) {
     );
 }
 
-export function postProject(dispatch, updates, changesToPost, projectId, callback) {
+export function postUpdateProject(dispatch, updates, changesToPost, projectId, callback) {
     let originalState = store.getState();
     let originalProjectContainer = originalState.projects.projects[projectId];
 
@@ -87,6 +114,55 @@ export function postProject(dispatch, updates, changesToPost, projectId, callbac
                 });
                 return;
             }
+        })
+    );
+}
+
+export function postCreateProject(dispatch, changesToPost, callback) {
+
+    // XXX
+    return (
+        fetch('/api/projects', {
+            method: 'POST',
+            credentials: "same-origin",
+            headers: new Headers({
+                'Content-type': 'text/json',
+                'Accept': 'text/json'
+            }),
+            body: JSON.stringify(changesToPost.project) // FIXME: full container? changes?
+        }).then(function(response) {
+            return response.json();
+        }).then(function(result) {
+            if (!result.success) {
+                showMessage(dispatch, result.message, "Hiba a mentéskor", "error");
+                return;
+            }
+
+            // XXX
+            callback();
+        })
+    );
+}
+
+export function deleteProject(dispatch, projectId, callback) {
+    return (
+        fetch('/api/projects/' + projectId + '?_method=delete', {
+            method: 'GET',
+            credentials: "same-origin",
+            headers: new Headers({
+                'Content-type': 'text/json',
+                'Accept': 'text/json'
+            }),
+        }).then(function(response) {
+            return response.json();
+        }).then(function(result) {
+            if (!result.success) {
+                showMessage(dispatch, result.message, "Hiba a mentéskor", "error");
+                return;
+            }
+
+            // XXX
+            callback();
         })
     );
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import { Pagination, Table } from 'semantic-ui-react'
+import { Button, Icon, Input, Menu, Pagination, Table } from 'semantic-ui-react'
 import dataDefinitions from '../../dataDefinitions'
 import { fetchProjects } from '../../redux/projects/actions'
 
@@ -40,7 +40,21 @@ export default connect(state => {
         return (
             <div>
                 <div>
-                    <button type="button" onClick={() => this.props.refetchProjects(this.props.mainProjectList.pageNo)}>Lista frissítése</button>
+                    <div style={{float:"left"}}>
+                        <Button onClick={() => this.props.refetchProjects(this.props.mainProjectList.pageNo)}>Lista frissítése</Button>
+                    </div>
+                    <div style={{float:"right"}}>
+                        {
+                            this.props.onAdd ? (
+                                <Button onClick={() => this.props.onAdd()}>
+                                    <Icon name="add" />
+                                    Új projekt létrehozása
+                                </Button>
+                            ) : (
+                                "EHH"
+                            )
+                        }
+                    </div>
                 </div>
                 <div>
                     <div>{this.props.mainProjectList.isFetching ? "Loading..." : ""}</div>

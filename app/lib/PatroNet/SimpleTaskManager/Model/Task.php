@@ -27,7 +27,17 @@ class Task extends ActiveRecordEntity implements JsonDataEntity
     {
         parent::__construct($oActiveRecord);
     }
-
+    
+    /**
+     * Gets the project where this task is (if any)
+     *
+     * @return Project|null
+     */
+    public function getProject()
+    {
+        return Project::getRepository()->get($this->oActiveRecord["project_id"]);
+    }
+    
     /**
      * Gets the sprint where this task is (if any)
      *

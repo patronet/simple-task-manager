@@ -35,7 +35,13 @@ export default connect(state => {
                         </div>
                     </div>
                 </div>
-                <Modal open={this.props.modal.isOpen}>
+                <Modal
+                    open={this.props.modal.isOpen}
+                    size="tiny"
+                    closeOnDimmerClick={false}
+                    closeIcon={true}
+                    onClose={() => this.props.closeModal()}
+                >
                     <Header
                         icon={<Icon
                             name={dataDefinitions.frame.modal.modalTypeInfo[this.props.modal.modalType].icon}
@@ -47,8 +53,21 @@ export default connect(state => {
                         {this.props.modal.content}
                     </Modal.Content>
                     <Modal.Actions>
+                        {
+                            this.props.modal.action ? (
+                                <Button
+                                    color={dataDefinitions.frame.modal.modalTypeInfo[this.props.modal.modalType].color}
+                                    onClick={() => {
+                                        this.props.modal.action();
+                                        this.props.closeModal();
+                                    }}
+                                >
+                                    Rajta!
+                                </Button>
+                            ) : null
+                        }
                         <Button
-                            color={dataDefinitions.frame.modal.modalTypeInfo[this.props.modal.modalType].color}
+                            color="grey"
                             onClick={() => this.props.closeModal()}
                         >
                             Bezár

@@ -50,6 +50,45 @@ class Project extends ActiveRecordEntity implements JsonDataEntity
     	return $oSprint;
     }
     
+    /**
+     * Gets tasks of this project
+     *
+     * @param string[string] $order
+     * @param mixed $limit
+     * @return Task[]|\PatroNet\Core\Database\ResultSet
+     */
+    public function getTasks($order = null, $limit = null)
+    {
+        return Task::getRepository()->getAllByFilter(["project_id" => $this->getId()], $order, $limit);
+    }
+    
+    /**
+     * Gets standalone tasks of this project
+     *
+     * @param string[string] $order
+     * @param mixed $limit
+     * @return Task[]|\PatroNet\Core\Database\ResultSet
+     */
+    public function getStandaloneTasks($order = null, $limit = null)
+    {
+        return Task::getRepository()->getAllByFilter([
+            "project_id" => $this->getId(),
+            "has_sprint" => 0,
+        ], $order, $limit);
+    }
+    
+    /**
+     * Creates a new task associated to this sprint
+     *
+     * @return Task
+     */
+    public function createTask()
+    {
+        $oTask = Task::getRepository()->create();
+        $oTask->getActiveRecord()["project_id"] = $this->getId();
+        return $oTask;
+    }
+    
     public function setStatus($status)
     {
         $this->oActiveRecord["status"] = $status;
@@ -131,6 +170,18 @@ class _Repository extends TableRepository implements JsonDataRepository
     {
         parent::__construct($oTable = Application::conn()->getTable("stm_project", "project_id", "project"));
         //$oTable->addRelation("[alias]", ["[table].[field]" => "[other table].[field]"], "[table name]");
+    }
+    
+    /**
+     * Creates a new unsaved project
+     *
+     * @return Project
+     */
+    public function create()
+    {
+        $oProject = parent::create();
+        $oProject->getActiveRecord()["datetime_created"] = date("Y-m-d H:i:s");
+        return $oProject;
     }
     
     /**

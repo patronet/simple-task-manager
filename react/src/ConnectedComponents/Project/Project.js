@@ -1,10 +1,11 @@
 import React from 'react';
 import update from 'react-addons-update';
 import { connect } from 'react-redux'
-import { Checkbox, Dropdown, Input, Form, Table } from 'semantic-ui-react'
+import { Button, Checkbox, Dropdown, Input, Form, Table } from 'semantic-ui-react'
 import Util from '../../Util'
 import dataDefinitions from '../../dataDefinitions'
-import { fetchProject, postProject } from '../../redux/projects/actions'
+import { showMessage } from '../../redux/frame/actions'
+import { deleteProject, fetchProject, postUpdateProject, postCreateProject } from '../../redux/projects/actions'
 
 export default connect(state => {
     return {
@@ -12,8 +13,11 @@ export default connect(state => {
     };
 }, dispatch => {
     return {
-        refetchProject: (projectId) => fetchProject(dispatch, projectId),
-        postProject: (updates, changesToPost, projectId, callback) => postProject(dispatch, updates, changesToPost, projectId, callback)
+        showMessage: (message, title, messageType, action) => showMessage(dispatch, message, title, messageType, action),
+        fetchProject: (projectId) => fetchProject(dispatch, projectId),
+        postUpdateProject: (updates, changesToPost, projectId, callback) => postUpdateProject(dispatch, updates, changesToPost, projectId, callback),
+        postCreateProject: (changesToPost, callback) => postCreateProject(dispatch, changesToPost, callback),
+        deleteProject: (projectId, callback) => deleteProject(dispatch, projectId, callback),
     };
 })(class extends React.Component {
 
@@ -27,21 +31,26 @@ export default connect(state => {
 
     componentWillMount() {
         if (!(this.props.projectId in this.props.projects)) {
-            this.props.refetchProject(this.props.projectId);
+            this.props.fetchProject(this.props.projectId);
         }
     }
 
     render() {
-        if (!(this.props.projectId in this.props.projects)) {
-            return (<div>Betöltés</div>);
-        }
+        let editedProjectContainer =  {project: {}};
+        let editedProject = {};
 
-        if (!this.props.projects[this.props.projectId]) {
-            return (<div>Hiba a betöltéskor!</div>);
-        }
+        if (this.props.projectId !== null) {
+            if (!(this.props.projectId in this.props.projects)) {
+                return (<div>Betöltés</div>);
+            }
 
-        let editedProjectContainer = update(this.props.projects[this.props.projectId], this.state.updates);
-        let editedProject = editedProjectContainer.project;
+            if (!this.props.projects[this.props.projectId]) {
+                return (<div>Hiba a betöltéskor!</div>);
+            }
+
+            editedProjectContainer = update(this.props.projects[this.props.projectId], this.state.updates);
+            editedProject = editedProjectContainer.project;
+        }
 
         let statusOptions = [];
         for (let status of dataDefinitions.project.projectStatuses) {
@@ -54,42 +63,46 @@ export default connect(state => {
         }
 
         let sprintItems = [];
-        for (let sprintContainer of editedProjectContainer.sprints) {
-            let sprint = sprintContainer.sprint;
-            sprintItems.push(
-                <Table.Row key={sprint.sprint_id}>
-                    <Table.Cell>{sprint.sprint_id}</Table.Cell>
-                    <Table.Cell><a href="#" onClick={(e) => {e.preventDefault();alert(sprint.sprint_id);}}>{sprint.label}</a></Table.Cell>
-                    <Table.Cell>---</Table.Cell> {/*TODO*/}
-                    <Table.Cell>---</Table.Cell> {/*TODO*/}
-                </Table.Row>
-            );
+        if (editedProjectContainer && editedProjectContainer.sprints) {
+            for (let sprintContainer of editedProjectContainer.sprints) {
+                let sprint = sprintContainer.sprint;
+                sprintItems.push(
+                    <Table.Row key={sprint.sprint_id}>
+                        <Table.Cell>{sprint.sprint_id}</Table.Cell>
+                        <Table.Cell><a href="#" onClick={(e) => {e.preventDefault();alert(sprint.sprint_id);}}>{sprint.label}</a></Table.Cell>
+                        <Table.Cell>---</Table.Cell> {/*TODO*/}
+                        <Table.Cell>---</Table.Cell> {/*TODO*/}
+                    </Table.Row>
+                );
+            }
         }
+
+        // XXX: default values
 
         return (
             <Form>
-                <div style={{position:"fixed",right:"20px",border:"2px solid #999999"}}>
+                <div style={{position:"fixed",right:"20px"}}>
                     <p>
-                        <button onClick={() => this.save()}>OK</button>
+                        <Button color="green" onClick={() => this.save()}>Rendben</Button>
                     </p>
                 </div>
-                <h2>Projekt adatai</h2>
-                <p>
-                    Projekt megnevezése:
+                <h2>{this.props.projectId ? "Projekt adatai" : "Új projekt"}</h2>
+                <Form.Field>
+                    <label>Projekt megnevezése:</label>
                     <Input
                         value={editedProject.label}
                         onChange={(ev) => this.injectSimpleChange("label", ev.target.value)}
                     />
-                </p>
-                <p>
-                    Státusz:
+                </Form.Field>
+                <Form.Field>
+                    <label>Státusz:</label>
                     <Dropdown
                         selection placeholder="Válasszon"
                         value={editedProject.status}
                         onChange={(ev, data) => this.injectSimpleChange("status", data.value)}
                         options={statusOptions}
                     />
-                </p>
+                </Form.Field>
                 <p>
                     Kezdődátum:
                     <Checkbox
@@ -117,7 +130,7 @@ export default connect(state => {
                     /> {/* TODO: datepicker */}
                 </p>
                 <Form.Field>
-                    Leírás:
+                    <label>Leírás:</label>
                     <textarea
                         value={editedProject.description}
                         onChange={(ev) => this.injectSimpleChange("description", ev.target.value)}
@@ -149,6 +162,13 @@ export default connect(state => {
                         )
                     }
                 </div>
+                {
+                    this.props.projectId ? (
+                        <p>
+                            <Button color="red" onClick={() => this.delete()}>Projekt törlése</Button>
+                        </p>
+                    ) : null
+                }
             </Form>
         );
     }
@@ -170,11 +190,25 @@ export default connect(state => {
     }
 
     save() {
-        if (Util.isEmptyObject(this.state.changesToPost)) {
+        if (this.props.projectId && Util.isEmptyObject(this.state.changesToPost)) {
             this.props.onSave();
         } else {
-            this.props.postProject(this.state.updates, this.state.changesToPost, this.props.projectId, this.props.onSave);
+            if (this.props.projectId) {
+                this.props.postUpdateProject(this.state.updates, this.state.changesToPost, this.props.projectId, this.props.onSave);
+            } else {
+                this.props.postCreateProject(this.state.changesToPost, this.props.onSave);
+            }
         }
+    }
+
+    delete() {
+        if (!this.props.projectId) {
+            return;
+        }
+
+        this.props.showMessage("Biztos?", "Törlés", "warning", () => {
+            this.props.deleteProject(this.props.projectId, this.props.onDelete);
+        });
     }
 
 })
