@@ -17,10 +17,10 @@ export function setSidebarMinimized(dispatch, minimized) {
     });
 }
 
-export function showMessage(dispatch, content, title = "Üzenet", modalType = "info", action = null) {
+export function showMessage(dispatch, content, title = "Üzenet", modalType = "info", action = null, actionButtonText = "Rajta!", abortable = true) {
     dispatch({
         type: 'SHOW_MODAL',
-        modalType, title, content, action
+        modalType, title, content, action, actionButtonText, abortable
     });
 }
 

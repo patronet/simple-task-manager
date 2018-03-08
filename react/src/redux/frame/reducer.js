@@ -18,7 +18,9 @@ export default (state = [], action) => {
                 modalType: {$set: action.modalType},
                 title: {$set: action.title},
                 content: {$set: action.content},
-                action: {$set: action.action}
+                action: {$set: action.action},
+                actionButtonText: {$set: action.actionButtonText},
+                abortable: {$set: action.abortable},
             }
         });
     } else if (action.type == 'CLOSE_MODAL') {

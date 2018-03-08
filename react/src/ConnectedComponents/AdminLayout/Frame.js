@@ -39,8 +39,8 @@ export default connect(state => {
                     open={this.props.modal.isOpen}
                     size="tiny"
                     closeOnDimmerClick={false}
-                    closeIcon={true}
-                    onClose={() => this.props.closeModal()}
+                    closeIcon={this.props.modal.abortable}
+                    onClose={this.props.modal.abortable ? () => this.props.closeModal() : null}
                 >
                     <Header
                         icon={<Icon
@@ -62,16 +62,20 @@ export default connect(state => {
                                         this.props.closeModal();
                                     }}
                                 >
-                                    Rajta!
+                                    {this.props.modal.actionButtonText}
                                 </Button>
                             ) : null
                         }
-                        <Button
-                            color="grey"
-                            onClick={() => this.props.closeModal()}
-                        >
-                            Bezár
-                        </Button>
+                        {
+                            this.props.modal.abortable ? (
+                                <Button
+                                    color="grey"
+                                    onClick={() => this.props.closeModal()}
+                                >
+                                    Bezár
+                                </Button>
+                            ) : null
+                        }
                     </Modal.Actions>
                 </Modal>
             </div>

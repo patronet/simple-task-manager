@@ -1,4 +1,9 @@
 export default {
+    user: {
+        isLoggedIn: false,
+        logInData: null,
+        userData: null,
+    },
     frame: {
         modal: {
             isOpen: false,
@@ -11,7 +16,7 @@ export default {
             minimized: false,
         },
         major: {
-            pageType: "projectList",
+            pageType: "dashboard",
             pageProperties: {
                 //projectId: 1,
             },
