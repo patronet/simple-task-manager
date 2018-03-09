@@ -16,7 +16,7 @@ export default {
             minimized: false,
         },
         major: {
-            pageType: "dashboard",
+            pageType: "projectList",
             pageProperties: {
                 //projectId: 1,
             },

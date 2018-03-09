@@ -8,26 +8,26 @@ html, body {
 
 .frame-top {
     box-sizing: border-box;
-    height: 50px !important;
+    height: 60px !important;
     padding: 10px;
     background-color: black;
     color: white;
 }
 
 .frame-page {
-    height: calc( 100vh - 50px );
+    height: calc( 100vh - 60px );
     overflow: hidden;
 }
 
 .frame-side {
     float: left;
-    height: calc( 100vh - 50px );
+    height: calc( 100vh - 60px );
     background-color: #1B1C1D;
 }
 
 .frame-major {
     overflow: auto;
     box-sizing: border-box;
-    height: calc( 100vh - 50px );
+    height: calc( 100vh - 60px );
     padding: 15px;
 }

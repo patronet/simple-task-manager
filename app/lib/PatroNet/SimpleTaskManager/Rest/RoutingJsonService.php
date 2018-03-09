@@ -14,16 +14,16 @@ class RoutingJsonService implements JsonService
         $this->routes[] = $oRoute;
     }
     
-    public function handleJsonQuery($path, $method, $data, $oCredential)
+    public function handleJsonQuery($path, $method, $data, Credentials $oCredentials)
     {
         foreach ($this->routes as $oRoute) {
-            if (!is_null($oResponse = $oRoute->tryHandle($path, $method, $data, $oCredential))) {
+            if (!is_null($oResponse = $oRoute->tryHandle($path, $method, $data, $oCredentials))) {
                 return $oResponse;
             }
         }
         return
             (new ResponseBuilder())
-            ->initJson(["message" => "Resource not found!"])
+            ->initJson(["message" => "No such service!"])
             ->setHttpStatus(404)
             ->build()
         ;
@@ -35,6 +35,7 @@ class RoutingJsonService implements JsonService
 namespace PatroNet\SimpleTaskManager\Rest\JsonService;
 
 use PatroNet\Core\Request\Response;
+use PatroNet\SimpleTaskManager\Rest\Credentials;
 
 class _Util
 {
@@ -68,10 +69,10 @@ interface _Route
      * @param string $path
      * @param string $method
      * @param mixed $data
-     * @param mixed $oCredential
+     * @param mixed $oCredentials
      * @return Response|null
      */
-    public function tryHandle($path, $method, $data, $oCredential);
+    public function tryHandle($path, $method, $data, Credentials $oCredentials);
     
 }
 
@@ -88,14 +89,14 @@ class _DefaultRoute implements _Route
         $this->methods = _Util::normalizeMethodList($methodOrMethods);
     }
     
-    public function tryHandle($path, $method, $data, $oCredential)
+    public function tryHandle($path, $method, $data, Credentials $oCredentials)
     {
         if (!_Util::checkMethod($this->methods, $method)) {
             return null;
         }
         
         $callback = $this->callback;
-        return $callback($path, $method, $data, $oCredential);
+        return $callback($path, $method, $data, $oCredentials);
     }
     
 }
@@ -119,7 +120,7 @@ class _ExactPathRoute implements _Route
         $this->callback = $callback;
     }
     
-    public function tryHandle($path, $method, $data, $oCredential)
+    public function tryHandle($path, $method, $data, Credentials $oCredentials)
     {
         if (!_Util::checkMethod($this->methods, $method)) {
             return null;
@@ -127,7 +128,7 @@ class _ExactPathRoute implements _Route
         
         if ($path == $this->path) {
             $callback = $this->callback;
-            return $callback($method, $data, $oCredential);
+            return $callback($method, $data, $oCredentials);
         } else {
             return null;
         }
@@ -154,7 +155,7 @@ class _MatchingPathRoute implements _Route
         $this->callback = $callback;
     }
     
-    public function tryHandle($path, $method, $data, $oCredential)
+    public function tryHandle($path, $method, $data, Credentials $oCredentials)
     {
         if (!_Util::checkMethod($this->methods, $method)) {
             return null;
@@ -162,7 +163,7 @@ class _MatchingPathRoute implements _Route
         
         if (preg_match($this->pathRegex, $path, $match)) {
             $callback = $this->callback;
-            return $callback($match, $method, $data, $oCredential);
+            return $callback($match, $method, $data, $oCredentials);
         } else {
             return null;
         }

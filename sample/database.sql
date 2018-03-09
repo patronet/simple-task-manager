@@ -153,12 +153,9 @@ CREATE TABLE IF NOT EXISTS `stm_task` (
 
 CREATE TABLE IF NOT EXISTS `stm_user` (
   `user_id` int(11) NOT NULL AUTO_INCREMENT,
-  `company_id` int(11) DEFAULT NULL,
-  `role` enum('developer','manager','customer') NOT NULL,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `hash_password` varchar(255) NOT NULL,
   PRIMARY KEY (`user_id`),
-  KEY `company_id` (`company_id`),
   KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;

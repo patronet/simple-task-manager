@@ -2,6 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux'
 import Frame from './ConnectedComponents/AdminLayout/Frame';
 import LoginPage from './ConnectedComponents/Login/LoginPage';
+import MainModal from './MainModal';
+
+import 'semantic-ui-css/semantic.min.css';
 
 export default connect(state => {
     return {
@@ -13,11 +16,12 @@ export default connect(state => {
 })(class extends React.Component {
 
     render() {
-        if (this.props.user.isLoggedIn) {
-            return <Frame />;
-        } else {
-            return <LoginPage />
-        }
+        return (
+            <div>
+                {this.props.user.isLoggedIn ? <Frame /> : <LoginPage />}
+                <MainModal />
+            </div>
+        );
     }
 
 });

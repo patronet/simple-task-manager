@@ -1,6 +1,6 @@
 import update from 'react-addons-update';
 
-export default (state = [], action) => {
+export default (state = {}, action = null) => {
     if (action.type == 'REQUEST_DASHBOARD') {
         return update(state, {isFetching: {$set: true}});
     } else if (action.type == 'RECEIVE_DASHBOARD') {

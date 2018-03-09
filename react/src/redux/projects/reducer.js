@@ -1,6 +1,6 @@
 import update from 'react-addons-update';
 
-export default (state = [], action) => {
+export default (state = {}, action = null) => {
     if (action.type == 'REQUEST_PROJECTS') {
         return update(state, {mainProjectList: {isFetching: {$set: true}}});
     } else if (action.type == 'REQUEST_PROJECT') {
@@ -9,10 +9,9 @@ export default (state = [], action) => {
         let projectsUpdates = {};
         let projectIds = [];
         for (let i = 0; i < action.projects.length; i++) {
-            let projectContainer = action.projects[i];
-            let project = projectContainer.project;
+            let project = action.projects[i];
             let projectId = project.project_id;
-            projectsUpdates[projectId] = {$set: projectContainer};
+            projectsUpdates[projectId] = {$set: project};
             projectIds.push(projectId);
         }
         return update(state, {
@@ -28,7 +27,7 @@ export default (state = [], action) => {
     } else if (action.type == 'RECEIVE_PROJECT') {
         return update(state, {
             projects: {
-                [action.projectId]: {$set: action.projectContainer}
+                [action.projectId]: {$set: action.project}
             }
         });
     } else if (action.type == 'POST_PROJECT') {
@@ -40,7 +39,7 @@ export default (state = [], action) => {
     } else if (action.type == 'POST_PROJECT_FAIL') {
         return update(state, {
             projects: {
-                [action.projectId]: {$set: action.originalProjectContainer}
+                [action.projectId]: {$set: action.originalProject}
             }
         });
     } else {

@@ -5,7 +5,7 @@ export function refreshDashboard(dispatch) {
         type: 'REQUEST_DASHBOARD',
     });
 
-    fetchJson('/api/dashboard', 'GET', null, function (resultData, response) {
+    return fetchJson('/api/dashboard', 'GET', null, function (resultData, response) {
         dispatch({
             type: 'RECEIVE_DASHBOARD',
             activeProjectCount: resultData.activeProjectCount,

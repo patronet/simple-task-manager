@@ -14,6 +14,6 @@ interface JsonService
      * @param mixed $oCredential
      * @return Response
      */
-    public function handleJsonQuery($path, $method, $data, $oCredential);
+    public function handleJsonQuery($path, $method, $data, Credentials $oCredential);
     
 }

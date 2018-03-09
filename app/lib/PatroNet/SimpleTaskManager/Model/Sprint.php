@@ -97,11 +97,7 @@ class Sprint extends ActiveRecordEntity implements JsonDataEntity
     
     public function toJsonData($entityViewParameters)
     {
-        // XXX
-        return [
-            "sprint" => $this->getActiveRecord()->getRow(),
-            "tasks" => Task::getRepository()->getJsonDataList(["sprint_id" => $this->getId()]),
-        ];
+        return $this->getActiveRecord()->getRow();
     }
     
     /**

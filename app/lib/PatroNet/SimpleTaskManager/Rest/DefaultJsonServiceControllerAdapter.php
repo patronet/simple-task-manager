@@ -11,9 +11,12 @@ class DefaultJsonServiceControllerAdapter implements Controller
     
     private $oJsonService;
     
-    public function __construct(JsonService $oJsonService)
+    private $oAuthenticator;
+    
+    public function __construct(JsonService $oJsonService, Authenticator $oAuthenticator = null)
     {
         $this->oJsonService = $oJsonService;
+        $this->oAuthenticator = $oAuthenticator;
     }
     
     /**
@@ -26,7 +29,7 @@ class DefaultJsonServiceControllerAdapter implements Controller
         $path = $oRequest->getPath();
         $method = $oRequest->getMethod();
         $data = array_merge($oRequest->getGet(), $oRequest->getPost()); // XXX
-        return $this->oJsonService->handleJsonQuery($path, $method, $data, null);
+        return $this->oJsonService->handleJsonQuery($path, $method, $data, $this->oAuthenticator->getCredentials($oRequest));
     }
     
 }

@@ -25,8 +25,7 @@ export default connect(state => {
         let projectItems = [];
         for (let i = 0; i < this.props.mainProjectList.projectIds.length; i++) {
             let projectId = this.props.mainProjectList.projectIds[i];
-            let projectContainer = this.props.projects[projectId];
-            let project = projectContainer.project;
+            let project = this.props.projects[projectId];
             projectItems.push(
                 <Table.Row key={project.project_id}>
                     <Table.Cell>{project.project_id}</Table.Cell>

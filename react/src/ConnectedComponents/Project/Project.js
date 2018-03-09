@@ -48,9 +48,10 @@ export default connect(state => {
                 return (<div>Hiba a betöltéskor!</div>);
             }
 
-            editedProjectContainer = update(this.props.projects[this.props.projectId], this.state.updates);
-            editedProject = editedProjectContainer.project;
+            editedProject = this.props.projects[this.props.projectId];
         }
+
+        editedProject = update(editedProject, this.state.updates);
 
         let statusOptions = [];
         for (let status of dataDefinitions.project.projectStatuses) {
@@ -63,9 +64,8 @@ export default connect(state => {
         }
 
         let sprintItems = [];
-        if (editedProjectContainer && editedProjectContainer.sprints) {
-            for (let sprintContainer of editedProjectContainer.sprints) {
-                let sprint = sprintContainer.sprint;
+        if (editedProject && editedProject.sprints) {
+            for (let sprint of editedProject.sprints) {
                 sprintItems.push(
                     <Table.Row key={sprint.sprint_id}>
                         <Table.Cell>{sprint.sprint_id}</Table.Cell>
@@ -114,7 +114,7 @@ export default connect(state => {
                         placeholder="Kezdődátum"
                         value={editedProject.date_startdate || ""}
                         onChange={(ev) => this.injectSimpleChange("date_startdate", ev.target.value, true)}
-                    /> {/* TODO: datepicker */}
+                    />
                 </p>
                 <p>
                     Záródátum:
@@ -176,17 +176,12 @@ export default connect(state => {
     injectSimpleChange(key, value, nullIfEmpty = false) {
         let newValue = (nullIfEmpty && !value) ? null : value;
 
-        // XXX
-        let newUpdates = this.state.updates;
-        newUpdates.project = newUpdates.project || {};
-        newUpdates.project[key] = {$set: newValue};
+        this.setState(update(this.state, {
+            updates: {[key]: {$set: {$set: newValue}}},
+            changesToPost: {[key]: {$set: newValue}},
+        }));
 
-        // XXX
-        let newchangesToPost = this.state.changesToPost;
-        newchangesToPost.project = newchangesToPost.project || {};
-        newchangesToPost.project[key] = newValue;
-
-        this.setState({updates: newUpdates, changesToPost: newchangesToPost});
+        var self = this;
     }
 
     save() {

@@ -125,11 +125,13 @@ class Project extends ActiveRecordEntity implements JsonDataEntity
     
     public function toJsonData($entityViewParameters)
     {
-        // XXX
-        return [
-            "project" => $this->getActiveRecord()->getRow(),
-            "sprints" => Sprint::getRepository()->getJsonDataList(["project_id" => $this->getId()]),
-        ];
+        $result = $this->getActiveRecord()->getRow();
+        // TODO
+        //if ($entityViewParameters["xxx"] == "yyy") {
+        if (true) {
+            $result["sprints"] = Sprint::getRepository()->getJsonDataList(["project_id" => $this->getId()]);
+        }
+        return $result;
     }
     
     /**
