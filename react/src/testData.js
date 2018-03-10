@@ -1,6 +1,6 @@
 export default {
     user: {
-        isLoggedIn: false,
+        isLoggedIn: true,
         logInData: null,
         userData: null,
     },
@@ -16,7 +16,7 @@ export default {
             minimized: false,
         },
         major: {
-            pageType: "projectList",
+            pageType: "taskBoard",
             pageProperties: {
                 //projectId: 1,
             },
@@ -26,6 +26,27 @@ export default {
         isPopulated: true,
         isFetching: false,
         activeProjectCount: 77,
+    },
+    taskBoard: {
+    	
+    	columnOrder: ["columnA", "columnB"],
+    	columns: {
+			columnA: {
+				// XXX
+				items: Array.from({ length: 10 }, (v, k) => k).map(k => ({
+					id: `item-a-${k}`,
+					content: `item A${k}`,
+				})),
+			},
+			columnB: {
+				// XXX
+				items: Array.from({ length: 10 }, (v, k) => k).map(k => ({
+					id: `item-b-${k}`,
+					content: `item B${k}`,
+				})),
+			},
+    	},
+    	
     },
     projects: {
         mainProjectList: {

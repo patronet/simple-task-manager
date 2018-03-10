@@ -50,7 +50,7 @@ export default connect(state => {
                                     Új projekt létrehozása
                                 </Button>
                             ) : (
-                                "EHH"
+                                ""
                             )
                         }
                     </div>

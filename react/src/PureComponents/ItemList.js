@@ -7,7 +7,7 @@ export default class extends React.Component {
     render() {
         return (<div>
             <p>Test string: {this.props.projects.length} {this.props.isFetching ? "Betöltés..." : ""}</p>
-        </div>)
+        </div>);
     }
 
 }
