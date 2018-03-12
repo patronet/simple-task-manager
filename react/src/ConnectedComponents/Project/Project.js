@@ -81,7 +81,7 @@ export default connect(state => {
 
         return (
             <Form>
-                <div style={{position:"fixed",right:"20px"}}>
+                <div style={{position:"fixed",right:"20px",zIndex:"1000"}}>
                     <p>
                         <Button color="green" onClick={() => this.save()}>Rendben</Button>
                     </p>
