@@ -1,6 +1,6 @@
 <?php
 
-namespace PatroNet\SimpleTaskManager;
+namespace PatroNet\SimpleTaskManager\Api;
 
 use PatroNet\SimpleTaskManager\Rest\RoutingJsonService;
 use PatroNet\SimpleTaskManager\Rest\JsonService\_ExactPathRoute;
@@ -84,7 +84,7 @@ class MainJsonService extends RoutingJsonService {
             return $oRepositoryResponseHelper->getEntityResponse($entityId);
         }));
         
-            $this->addRoute(new _ExactPathRoute("post", $path, function ($method, $data, Credentials $oCredentials) use ($path, $oRepositoryResponseHelper) {
+        $this->addRoute(new _ExactPathRoute("post", $path, function ($method, $data, Credentials $oCredentials) use ($path, $oRepositoryResponseHelper) {
             return $oRepositoryResponseHelper->handleCreate($data);
         }));
         

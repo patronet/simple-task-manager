@@ -38,49 +38,56 @@ export default connect(state => {
 				this.props.resetTaskList(columnName, newList);
 			});
 		}
-		
+
 	}
-	
+
 	render() {
 	    return (
-    		<div className="taskboard-board"><div className="taskboard-board-inner">
-			    {this.props.taskBoard.columnOrder.map((columnName, index) => {
-					let targetName = "taskBoard:" + columnName;
-					let columnData = this.props.taskBoard.columns[columnName];
-			    	return (
-		    			<div className="taskboard-board-column" style={{backgroundColor:columnData.columnColor}}>
-  	                		<h2 className="taskboard-board-column-title" style={{backgroundColor:columnData.titleColor}}>{columnData.title}</h2>
-						    <Droppable key={columnName} droppableId={targetName}>
-				                {(dropProvided, dropSnapshot) => (
-				  	                <div ref={dropProvided.innerRef} className="taskboard-board-column-list">
-				  	                	{columnData.tasks.map((task, index) => (
-				                			<Draggable key={"task-" + task.id} draggableId={"task-" + task.id} index={index}>
-				  	                			{(dragProvided, dragSnapshot) => (
-				
-													<div className="taskboard-board-item-holder">
-				  	                					<div className="taskboard-board-item"
-															ref={dragProvided.innerRef} {...dragProvided.draggableProps} {...dragProvided.dragHandleProps}
-				  	                						style={{userSelect: 'none', ...dragProvided.draggableProps.style, borderColor: task.color}}
-			      	                					>
-				  	                						<h3 className="taskboard-board-item-title" style={{backgroundColor:task.color}}>{task.label}</h3>
-			      	                						<p style={{margin:"0.2vw"}}>
-			      	                							{task.projektLabel};
-			      	          									{task.customerLabel}
-			      	          								</p>
-			      	                					</div>
-			      	                					{dragProvided.placeholder}
-													</div>
-													
-			                					)}
-			      	                		</Draggable>
-			          	                ))}
-			      	                </div>
-			  	                )}
-			    		    </Droppable>
-		    		    </div>
-				    );
-		        })}
-		    </div></div>
+            <div>
+
+                <h2>Task Board</h2>
+
+        		<div className="taskboard-board">
+                    <div className="taskboard-board-inner">
+        			    {this.props.taskBoard.columnOrder.map((columnName, index) => {
+        					let targetName = "taskBoard:" + columnName;
+        					let columnData = this.props.taskBoard.columns[columnName];
+        			    	return (
+        		    			<div className="taskboard-board-column" style={{backgroundColor:columnData.columnColor}}>
+          	                		<h3 className="taskboard-board-column-title" style={{backgroundColor:columnData.titleColor}}>{columnData.title}</h3>
+        						    <Droppable key={columnName} droppableId={targetName}>
+        				                {(dropProvided, dropSnapshot) => (
+        				  	                <div ref={dropProvided.innerRef} className="taskboard-board-column-list">
+        				  	                	{columnData.tasks.map((task, index) => (
+        				                			<Draggable key={"task-" + task.id} draggableId={"task-" + task.id} index={index}>
+        				  	                			{(dragProvided, dragSnapshot) => (
+
+        													<div className="taskboard-board-item-holder">
+        				  	                					<div className="taskboard-board-item"
+        															ref={dragProvided.innerRef} {...dragProvided.draggableProps} {...dragProvided.dragHandleProps}
+        				  	                						style={{userSelect: 'none', ...dragProvided.draggableProps.style, borderColor: task.color}}
+        			      	                					>
+        				  	                						<h4 className="taskboard-board-item-title" style={{backgroundColor:task.color}}>{task.label}</h4>
+        			      	                						<p style={{margin:"0.2vw"}}>
+        			      	                							{task.projektLabel};
+        			      	          									{task.customerLabel}
+        			      	          								</p>
+        			      	                					</div>
+        			      	                					{dragProvided.placeholder}
+        													</div>
+
+        			                					)}
+        			      	                		</Draggable>
+        			          	                ))}
+        			      	                </div>
+        			  	                )}
+        			    		    </Droppable>
+        		    		    </div>
+        				    );
+        		        })}
+        		    </div>
+                </div>
+            </div>
 	    );
 	}
 })

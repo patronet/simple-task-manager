@@ -29,16 +29,16 @@
 }
 
 .taskboard-board-column-list {
-	min-height: 200px;
+	min-height: 70vh;
 	overflow: hidden;
 }
 
 .taskboard-board-item-holder {
-	
+
 }
 
 .taskboard-board-item {
-	margin: 1vw;
+	margin: 1vw 1vw 0 1vw;
 	overflow: hidden;
 	border: 1px solid #777777;
 	background-color: #DDDDDD;
@@ -53,30 +53,31 @@
 	overflow: hidden;
 	margin: 0;
 	padding: 0.4vw;
+	font-size: 1.2vw;
 }
 
 @media (max-width: 750px) {
-	
+
 	.taskboard-board, .taskboard-board-inner, .taskboard-board-column {
 		display: block;
 	}
-	
+
 	.taskboard-board {
 		border-top: none;
 	}
-	
+
 	.taskboard-board-column {
 		margin-top: 2vh;
 		border-top: 0.3vh solid #553300;
 		border-right: none;
 	}
-	
+
 	.taskboard-board-column:first-child {
 		margin-top: 0;
 	}
-	
+
 	.taskboard-board-column-title {
 		font-size: 20pt;
 	}
-	
+
 }

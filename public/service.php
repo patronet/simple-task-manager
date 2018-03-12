@@ -5,6 +5,7 @@ namespace PatroNet\SimpleTaskManager;
 use PatroNet\SimpleTaskManager\Rest\DefaultJsonServiceControllerAdapter;
 use PatroNet\SimpleTaskManager\Rest\DefaultRestRequest;
 use PatroNet\SimpleTaskManager\Rest\DefaultAuthenticator;
+use PatroNet\SimpleTaskManager\Api\MainJsonService;
 
 error_reporting(E_ALL);
 ini_set("display_errors", true);
