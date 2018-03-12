@@ -5,7 +5,7 @@ export default (state = {}, action = null) => {
     	return update(state, {
     		columns: {
     			[action.columnName]: {
-    				items: {$set: action.newList},
+    				tasks: {$set: action.newList},
     			}
     		},
 		});

@@ -1,0 +1,82 @@
+
+.taskboard-board {
+	display: table;
+	table-layout: fixed;
+	width: 100%;
+	border-top: 0.3vh solid #553300;
+}
+
+.taskboard-board-inner {
+	display: table-row;
+}
+
+.taskboard-board-column {
+	display: table-cell;
+	background-color: #BBBBBB;
+	border-right: 1px dotted #777777;
+	overflow: hidden;
+}
+
+.taskboard-board-column-title {
+	margin: 0;
+	padding: 0.4vw;
+	background-color: black;
+	color: #553300;
+	font-weight: bold;
+	font-size: 1.5vw;
+	text-align: center;
+	box-shadow: 0 0 1vh rgba(0, 0, 0, 0.5);
+}
+
+.taskboard-board-column-list {
+	min-height: 200px;
+	overflow: hidden;
+}
+
+.taskboard-board-item-holder {
+	
+}
+
+.taskboard-board-item {
+	margin: 1vw;
+	overflow: hidden;
+	border: 1px solid #777777;
+	background-color: #DDDDDD;
+	color: black;
+	min-height: 8vh;
+	border-radius: 1vh;
+	box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.4);
+	border: 2px solid black;
+}
+
+.taskboard-board-item-title {
+	overflow: hidden;
+	margin: 0;
+	padding: 0.4vw;
+}
+
+@media (max-width: 750px) {
+	
+	.taskboard-board, .taskboard-board-inner, .taskboard-board-column {
+		display: block;
+	}
+	
+	.taskboard-board {
+		border-top: none;
+	}
+	
+	.taskboard-board-column {
+		margin-top: 2vh;
+		border-top: 0.3vh solid #553300;
+		border-right: none;
+	}
+	
+	.taskboard-board-column:first-child {
+		margin-top: 0;
+	}
+	
+	.taskboard-board-column-title {
+		font-size: 20pt;
+	}
+	
+}
