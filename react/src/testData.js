@@ -1,6 +1,6 @@
 export default {
     user: {
-        isLoggedIn: true,
+        isLoggedIn: false,
         logInData: null,
         userData: null,
     },
@@ -16,7 +16,7 @@ export default {
             minimized: false,
         },
         major: {
-            pageType: "calendar",
+            pageType: "dashboard",
             pageProperties: {
                 //projectId: 1,
             },

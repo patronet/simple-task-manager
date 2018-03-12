@@ -1,18 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { DragDropContext } from 'react-beautiful-dnd';
-import store from './store';
-import { updateStateOnDrop } from './dnd';
-import App from './App';
-import BigCalendar from 'react-big-calendar';
 import moment from 'moment';
+import { DragDropContext } from 'react-beautiful-dnd';
+import { updateStateOnDrop } from './dnd';
+import BigCalendar from 'react-big-calendar';
+import store from './store';
+import { serializeSession } from './session';
+import App from './App';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './index.css';
 
 moment.locale('hu');
 BigCalendar.momentLocalizer(moment);
+
+window.addEventListener("beforeunload", function (event) {
+    serializeSession(store.getState());
+});
 
 ReactDOM.render(
     <Provider store={store}>
