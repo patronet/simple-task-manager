@@ -56,7 +56,7 @@ export default connect(state => {
                     </div>
                 </div>
                 <div>
-                    <div>{this.props.mainProjectList.isFetching ? "Loading..." : ""}</div>
+                    <div>{this.props.mainProjectList.isFetching ? <Icon name="refresh" loading speed={100} size="large" /> : null}</div>
                     <Table celled structured>
                         <Table.Header>
                             <Table.Row>

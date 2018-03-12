@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
+import { Icon } from 'semantic-ui-react'
 import { refreshDashboard } from '../../redux/dashboard/actions'
 
 export default connect(state => {
@@ -23,7 +24,7 @@ export default connect(state => {
 
         return (
             <div>
-                <h2>Dashboard {this.props.isFetching ? "..." : ""}</h2>
+                <h2>Dashboard {this.props.isFetching ? <Icon name="refresh" loading /> : null}</h2>
                 <p>
                     <button onClick={() => this.props.refreshDashboard()}>Újratöltés (a szerverről)</button>
                 </p>
