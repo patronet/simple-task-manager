@@ -16,7 +16,7 @@ export default {
             minimized: false,
         },
         major: {
-            pageType: "taskBoard",
+            pageType: "calendar",
             pageProperties: {
                 //projectId: 1,
             },
@@ -28,7 +28,7 @@ export default {
         activeProjectCount: 77,
     },
     taskBoard: {
-    	
+
     	columnOrder: ["pending", "progress", "infinal", "accepting"],
     	columns: {
 			pending: {
@@ -109,7 +109,7 @@ export default {
 				],
 			},
     	},
-    	
+
     },
     projects: {
         mainProjectList: {

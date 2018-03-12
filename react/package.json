@@ -7,11 +7,13 @@
     "npm": "^5.7.1",
     "react": "^15.5.4",
     "react-addons-update": "^15.6.2",
+    "moment": "^2.21.0",
     "react-beautiful-dnd": "^5.0.0",
     "react-dom": "^15.5.4",
     "react-redux": "^5.0.6",
     "redux": "^3.7.2",
-    "semantic-ui-react": "^0.78.2"
+    "semantic-ui-react": "^0.78.2",
+    "react-big-calendar": "^0.18.0"
   },
   "devDependencies": {
     "react-scripts": "1.0.7",
