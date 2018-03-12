@@ -98,6 +98,14 @@ class User extends ActiveRecordEntity implements JsonDataEntity
     }
     
     /**
+     * @return string|null
+     */
+    public function getImageUrl()
+    {
+        return null;
+    }
+    
+    /**
      * Deletes this user
      * 
      * @return boolean
@@ -112,11 +120,13 @@ class User extends ActiveRecordEntity implements JsonDataEntity
     public function toJsonData($entityViewParameters)
     {
         $row = $this->getActiveRecord()->getRow();
+        $imageUrl = $this->getImageUrl();
         return [
             "user_id" => $row["user_id"],
             "username" => $row["email"],
             "email" => $row["email"],
             "name" => $row["name"],
+            "image" => $imageUrl,
         ];
     }
     

@@ -50,13 +50,13 @@ export default connect(state => {
         let color = (name == "toggle") ? "teal" : null;
         if (this.props.minimized) {
             return (
-                <Menu.Item name={name} key={name} onClick={callback}>
+                <Menu.Item name={name} key={name} onClick={(ev) => {ev.preventDefault();callback();}} as="a" href="#">
                     <Icon name={icon} color={color} />
                 </Menu.Item>
             );
         } else {
             return (
-                <Menu.Item name={name} key={name} onClick={callback} style={{width:"200px"}}>
+                <Menu.Item name={name} key={name} onClick={(ev) => {ev.preventDefault();callback();}} as="a" href="#" style={{width:"200px"}}>
                     <Icon name={icon} /> {label}
                 </Menu.Item>
             );

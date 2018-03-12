@@ -5,7 +5,10 @@ import { logOut } from '../../redux/user/actions'
 import { showMessage } from '../../redux/frame/actions'
 
 export default connect(state => {
-    return state.frame;
+    return {
+        frame: state.frame,
+        user: state.user,
+    };
 }, dispatch => {
     return {
         logOut: () => logOut(dispatch),
@@ -13,13 +16,19 @@ export default connect(state => {
     };
 })(class extends React.Component {
 
-    render() {
+    render() {console.log(this.props.user);
         var activeItem = "home";
         return (
             <div style={{overflow:"hidden"}}>
                 <div style={{float:"left"}}>
-                    <Image src="https://thefinanser.com/wp-content/uploads/2015/12/6a01053620481c970b01b7c7617a9f970b-600wi.jpg" avatar />
-                    Teszt Jakab
+                    <Button inverted basic>
+                        {
+                            this.props.user.userData.image ?
+                            <Image src={this.props.user.userData.image} avatar /> :
+                            <Icon name="user" />
+                        }
+                        {this.props.user.userData.name}
+                    </Button>
                 </div>
                 <div style={{float:"right"}}>
                     <Button onClick={() => this.logOut()} color="red">

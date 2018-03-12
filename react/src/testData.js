@@ -2,7 +2,16 @@ export default {
     user: {
         isLoggedIn: false,
         logInData: null,
-        userData: null,
+        userData: {
+
+
+            "user_id": "1",
+            "username": "horvath@patronet.net",
+            "email": "horvath@patronet.net",
+            "name": "Horváth Dávid",
+            "image": null
+
+        },
     },
     frame: {
         modal: {

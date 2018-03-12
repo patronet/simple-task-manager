@@ -16,13 +16,18 @@ class MainJsonService extends RoutingJsonService {
     public function __construct()
     {
         $this->addRoute(new _ExactPathRoute("get", "", function ($method, $data, Credentials $oCredentials) {
+            $resultData = [
+                "apiName" => "simple-task-manager",
+                "apiVersion" => "0.1",
+                "information" => "horvath@patronet.net, PatroNet C., Hungary",
+            ];
+            $userData = $oCredentials->getUserData();
+            if (!empty($userData)) {
+                $resultData["user"] = $userData;
+            }
             return
                 (new ResponseBuilder())
-                ->initJson([
-                    "apiName" => "simple-task-manager",
-                    "apiVersion" => "0.1",
-                    "information" => "horvath@patronet.net, PatroNet C., Hungary",
-                ])
+                ->initJson($resultData)
                 ->build()
             ;
         }));
