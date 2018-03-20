@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Hoszt: localhost
--- Létrehozás ideje: 2018. Már 08. 21:18
+-- Létrehozás ideje: 2018. Már 20. 21:01
 -- Szerver verzió: 5.6.38
 -- PHP verzió: 5.6.30-0+deb8u1
 
@@ -127,6 +127,9 @@ CREATE TABLE IF NOT EXISTS `stm_task` (
   `is_confirmed_by_management` tinyint(1) NOT NULL,
   `is_confirmed_by_client` tinyint(1) NOT NULL,
   `status` enum('created','progress','paused','developed','ready','accepted') NOT NULL,
+  `developer_user_id` int(11) DEFAULT NULL,
+  `development_status` enum('pending','progress','infinal','accepting') DEFAULT NULL,
+  `taskboard_position` int(11) DEFAULT NULL,
   `label` varchar(255) NOT NULL,
   `description` text NOT NULL,
   `datetime_created` datetime NOT NULL,
@@ -142,7 +145,9 @@ CREATE TABLE IF NOT EXISTS `stm_task` (
   KEY `has_project_2` (`has_project`),
   KEY `project_id_2` (`project_id`),
   KEY `has_issue` (`has_issue`),
-  KEY `issue_id` (`issue_id`)
+  KEY `issue_id` (`issue_id`),
+  KEY `development_status` (`development_status`),
+  KEY `developer_user_id` (`developer_user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
@@ -158,4 +163,11 @@ CREATE TABLE IF NOT EXISTS `stm_user` (
   `hash_password` varchar(255) NOT NULL,
   PRIMARY KEY (`user_id`),
   KEY `email` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- A tábla adatainak kiíratása `stm_user`
+--
+
+INSERT INTO `stm_user` (`user_id`, `name`, `email`, `hash_password`) VALUES
+(1, 'Horváth Dávid', 'horvath@patronet.net', '$2y$10$t.4WGX9ZVWWtOsLjqpOb0uRMevpzQYTjUh/dGdxVwCqVy/yoT6I1i');

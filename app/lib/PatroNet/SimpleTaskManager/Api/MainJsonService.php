@@ -10,6 +10,7 @@ use PatroNet\SimpleTaskManager\Rest\RepositoryResponseHelper;
 use PatroNet\SimpleTaskManager\Model\Sprint;
 use PatroNet\Core\Request\ResponseBuilder;
 use PatroNet\SimpleTaskManager\Rest\Credentials;
+use PatroNet\SimpleTaskManager\Model\User;
 
 class MainJsonService extends RoutingJsonService {
     
@@ -50,6 +51,20 @@ class MainJsonService extends RoutingJsonService {
             return
                 (new ResponseBuilder())
                 ->initJson(["activeProjectCount" => $activeProjectCount])
+                ->build()
+            ;
+        }));
+        
+        $this->addRoute(new _ExactPathRoute("get", "task-board", function ($method, $data, Credentials $oCredentials) {
+            $userId = $oCredentials->getUserData()["user_id"];
+            $oUser = User::getRepository()->get($userId);
+            
+            // TODO
+            $oUser->getTaskBoad();
+            
+            return
+                (new ResponseBuilder())
+                ->initJson(["user" => $oUser->getActiveRecord()->getRow()])
                 ->build()
             ;
         }));

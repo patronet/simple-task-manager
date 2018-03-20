@@ -20,6 +20,18 @@ class Task extends ActiveRecordEntity implements JsonDataEntity
     const STATUS_READY = 'ready';
     const STATUS_ACCEPTED = 'accepted';
     
+    const DEVELOPMENT_STATUS_PENDING = 'pending';
+    const DEVELOPMENT_STATUS_PROGRESS = 'progress';
+    const DEVELOPMENT_STATUS_INFINAL = 'infinal';
+    const DEVELOPMENT_STATUS_ACCEPTING = 'accepting';
+    
+    public static $DEVELOPMENT_STATUS_MAP = [
+        self::DEVELOPMENT_STATUS_PENDING => [/* TODO */],
+        self::DEVELOPMENT_STATUS_PROGRESS => [/* TODO */],
+        self::DEVELOPMENT_STATUS_INFINAL => [/* TODO */],
+        self::DEVELOPMENT_STATUS_ACCEPTING => [/* TODO */],
+    ];
+    
     private static $oRepository = null;
     
     
@@ -57,6 +69,17 @@ class Task extends ActiveRecordEntity implements JsonDataEntity
     public function getStatus()
     {
         return $this->oActiveRecord["status"];
+    }
+    
+    public function setDevelopmentStatus($developmentStatus)
+    {
+        $this->oActiveRecord["development_status"] = $developmentStatus;
+        return $this;
+    }
+    
+    public function getDevelopmentStatus()
+    {
+        return $this->oActiveRecord["development_status"];
     }
     
     public function setLabel($label)

@@ -106,6 +106,20 @@ class User extends ActiveRecordEntity implements JsonDataEntity
     }
     
     /**
+     * @return Task[][]
+     */
+    public function getTaskBoad()
+    {
+        $result = [];
+        foreach (Task::$DEVELOPMENT_STATUS_MAP as $developmentStatus => $statusInfo) {
+            $filter = null; // TODO
+            $order = ["taskboard_position" => "asc"];
+            $result[$developmentStatus] = Task::getRepository()->getAllByFilter($filter, $order)->fetchAll();
+        }
+        return $result;
+    }
+    
+    /**
      * Deletes this user
      * 
      * @return boolean
